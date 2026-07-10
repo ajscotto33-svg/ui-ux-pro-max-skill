@@ -1,4 +1,4 @@
-name: Deploy scroll-hero to GitHub Pages
+name: Deploy ATS Flights to GitHub Pages
 on:
   push:
     branches: [claude/scroll-hero-video-component-vnorx7]
@@ -22,13 +22,13 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: projects/scroll-hero/package-lock.json
+          cache-dependency-path: projects/ats-flights/package-lock.json
       - name: Install dependencies
         run: npm ci
-        working-directory: projects/scroll-hero
+        working-directory: projects/ats-flights
       - name: Build static export
         run: npm run build
-        working-directory: projects/scroll-hero
+        working-directory: projects/ats-flights
         env:
           NEXT_PUBLIC_BASE_PATH: /ui-ux-pro-max-skill
       - uses: actions/configure-pages@v5
@@ -36,6 +36,6 @@ jobs:
           enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: projects/scroll-hero/out
+          path: projects/ats-flights/out
       - id: deployment
         uses: actions/deploy-pages@v4

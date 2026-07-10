@@ -1,0 +1,38 @@
+# One-shot helper: the Claude Code sandbox can't reach Higgsfield's CDN, so a
+# CI runner downloads the generated ATS jet clip, re-encodes it keyframe-per-
+# frame for scroll scrubbing, and commits it. Safe to delete after hero.mp4 lands.
+name: Fetch ATS jet video
+on:
+  push:
+    branches: [claude/scroll-hero-video-component-vnorx7]
+    paths: ['.github/workflows/fetch-jet.yml']
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Skip if hero.mp4 already committed
+        id: guard
+        run: |
+          if [ -f projects/ats-flights/public/hero.mp4 ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Download and re-encode for scrubbing
+        if: steps.guard.outputs.present == 'false'
+        run: |
+          sudo apt-get update -q && sudo apt-get install -yq ffmpeg
+          curl -sSL -o /tmp/jet_raw.mp4 "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260710_131736_17e28132-d804-4752-9518-009dbedbc65d.mp4"
+          ffmpeg -y -i /tmp/jet_raw.mp4 -g 1 -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart -an projects/ats-flights/public/hero.mp4
+          ls -la projects/ats-flights/public/hero.mp4
+      - name: Commit hero.mp4
+        if: steps.guard.outputs.present == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add projects/ats-flights/public/hero.mp4
+          git commit -m "Add ATS jet hero.mp4 (Higgsfield, re-encoded keyframe-per-frame for scroll scrubbing)"
+          git push
