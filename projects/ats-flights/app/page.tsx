@@ -1,4 +1,7 @@
+import Link from "next/link";
 import ScrollHero from "./components/ScrollHero";
+import Nav from "./components/Nav";
+import Footer from "./components/Footer";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -16,40 +19,32 @@ const STATS = [
   { value: "24 / 7", unit: "", label: "On-demand, worldwide" },
 ];
 
-const SERVICES = [
+const EXPLORE = [
   {
-    name: "On-Demand Charter",
-    body: "Domestic and international charter on your schedule. Long-range Gulfstream aircraft, specialized one-way pricing, and in-flight WiFi — booked around you, not a timetable.",
+    href: "/fleet/",
+    name: "The Fleet",
+    body: "Long-range Gulfstream aircraft engineered for the whole world — 14 seats, 5 berths, 6,200 nautical miles non-stop.",
+    cta: "Explore the fleet",
   },
   {
-    name: "Jet Charter Cards",
-    body: "Guaranteed access and fixed hourly rates without the capital of ownership. Fly the fleet you trust, with the consistency and priority of a private program.",
+    href: "/services/",
+    name: "Services",
+    body: "On-demand charter, jet charter cards, and government operations — three ways to fly privately, all at the same standard.",
+    cta: "See all services",
   },
   {
-    name: "Government Charters",
-    body: "An FAA Part 135 air carrier serving federal, state, and local agencies — over five years of government operations with a perfect safety and security track record.",
+    href: "/safety/",
+    name: "Safety",
+    body: "One of the rare few operators to clear every bar: ARG/US Platinum, Wyvern, IS-BAO Stage 3, and FAA Part 5 SMS.",
+    cta: "Our safety record",
   },
 ];
 
 export default function Home() {
   return (
     <main>
-      <header className="nav">
-        <a className="nav__brand" href="#top" aria-label="ATS — Aircraft Transport Service">
-          <span className="nav__logo">ATS</span>
-          <span className="nav__brand-sub">Aircraft Transport Service</span>
-        </a>
-        <nav className="nav__links">
-          <a href="#fleet">Fleet</a>
-          <a href="#services">Services</a>
-          <a href="#safety">Safety</a>
-          <a className="nav__cta" href="tel:+16029226769">
-            +1 602 922 6769
-          </a>
-        </nav>
-      </header>
+      <Nav />
 
-      <span id="top" />
       <ScrollHero src={`${basePath}/hero.mp4`} scrollLengthVh={4} />
 
       {/* Certification / trust bar */}
@@ -81,102 +76,40 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services */}
-      <section className="section" id="services">
+      {/* Explore the site */}
+      <section className="section">
         <div className="section__head">
-          <p className="section__eyebrow">What we fly for you</p>
+          <p className="section__eyebrow">Aircraft Transport Service</p>
           <h2 className="section__title">
-            Three ways to travel <span>privately.</span>
+            Private aviation, <span>properly done.</span>
           </h2>
         </div>
         <div className="services">
-          {SERVICES.map((s) => (
-            <article key={s.name} className="service-card">
-              <h3 className="service-card__name">{s.name}</h3>
-              <p className="service-card__body">{s.body}</p>
-            </article>
+          {EXPLORE.map((e) => (
+            <Link key={e.name} href={e.href} className="service-card service-card--link">
+              <h3 className="service-card__name">{e.name}</h3>
+              <p className="service-card__body">{e.body}</p>
+              <span className="service-card__cta">{e.cta} →</span>
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* Fleet — Gulfstream V feature */}
-      <section className="fleet" id="fleet">
-        <div className="fleet__intro">
-          <p className="section__eyebrow">The fleet</p>
-          <h2 className="section__title">
-            The Gulfstream&nbsp;V.
-            <br />
-            <span>Built for the whole world.</span>
-          </h2>
-          <p className="fleet__lead">
-            For flights over ten hours, the ultra-long-range Gulfstream V has
-            been the only choice for travelers crossing the globe — cabin, crew,
-            and range engineered for the distance.
-          </p>
-        </div>
-        <div className="fleet__spec-grid">
-          <div className="fleet__spec">
-            <p className="fleet__spec-value">14</p>
-            <p className="fleet__spec-label">Passenger seats</p>
-          </div>
-          <div className="fleet__spec">
-            <p className="fleet__spec-value">5</p>
-            <p className="fleet__spec-label">Berths for sleeping</p>
-          </div>
-          <div className="fleet__spec">
-            <p className="fleet__spec-value">6,200<span> nm</span></p>
-            <p className="fleet__spec-label">Non-stop range</p>
-          </div>
-          <div className="fleet__spec">
-            <p className="fleet__spec-value">10<span> hr+</span></p>
-            <p className="fleet__spec-label">With dedicated crew rest</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Safety */}
-      <section className="section safety" id="safety">
-        <div className="section__head">
-          <p className="section__eyebrow">Safety without compromise</p>
-          <h2 className="section__title">
-            The rare few who clear <span>every bar.</span>
-          </h2>
-        </div>
-        <p className="safety__body">
-          Unlike most Part&nbsp;135 operators, ATS carries the top safety
-          rating from every authority that grants one — a Platinum rating from
-          ARG/US, recognition by Wyvern, IS-BAO Stage&nbsp;3 registration, and a
-          completed FAA Part&nbsp;5 Safety Management System. For more than
-          fifteen years that discipline has carried VIPs, executives, athletes,
-          entertainers, and heads of state without incident.
-        </p>
-        <p className="safety__clientele">
-          VIPs · Executives · Professional Athletes · Entertainers · Heads of State
-        </p>
-      </section>
-
       {/* Contact CTA */}
-      <section className="contact" id="contact">
+      <section className="contact">
         <p className="section__eyebrow">Charter sales</p>
         <h2 className="contact__title">Tell us where you need to be.</h2>
         <div className="contact__actions">
           <a className="contact__primary" href="tel:+16029226769">
             +1 602 922 6769
           </a>
-          <a className="contact__secondary" href="mailto:charter@atsflights.com">
-            charter@atsflights.com
-          </a>
+          <Link className="contact__secondary" href="/contact/">
+            Contact us
+          </Link>
         </div>
-        <p className="contact__address">
-          Aircraft Transport Service · 5615 S. Sossaman Rd, Mesa, Arizona 85212
-        </p>
       </section>
 
-      <footer className="footer">
-        <span className="footer__logo">ATS</span>
-        <span>Aircraft Transport Service</span>
-        <span>Site by Andrew Scotto</span>
-      </footer>
+      <Footer />
     </main>
   );
 }

@@ -6,6 +6,8 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const nextConfig = {
   output: "export",
   basePath,
+  // Emit folder/index.html per route so GitHub Pages serves clean URLs
+  trailingSlash: true,
 };
 
 export default nextConfig;
