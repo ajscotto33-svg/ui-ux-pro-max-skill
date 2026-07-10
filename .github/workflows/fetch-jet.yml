@@ -25,6 +25,7 @@ jobs:
         if: steps.guard.outputs.present == 'false'
         run: |
           sudo apt-get update -q && sudo apt-get install -yq ffmpeg
+          mkdir -p projects/ats-flights/public
           curl -sSL -o /tmp/jet_raw.mp4 "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260710_131736_17e28132-d804-4752-9518-009dbedbc65d.mp4"
           ffmpeg -y -i /tmp/jet_raw.mp4 -g 1 -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart -an projects/ats-flights/public/hero.mp4
           ls -la projects/ats-flights/public/hero.mp4
