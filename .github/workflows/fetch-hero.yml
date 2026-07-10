@@ -24,6 +24,7 @@ jobs:
       - name: Download and re-encode for scrubbing
         if: steps.guard.outputs.present == 'false'
         run: |
+          sudo apt-get update -q && sudo apt-get install -yq ffmpeg
           curl -sSL -o /tmp/hero_raw.mp4 "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260710_030518_4070f789-d92f-4705-b8cf-a6ba8e52f61a.mp4"
           ffmpeg -y -i /tmp/hero_raw.mp4 -g 1 -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart -an projects/scroll-hero/public/hero.mp4
           ls -la projects/scroll-hero/public/hero.mp4

@@ -1,9 +1,11 @@
 import ScrollHero from "./components/ScrollHero";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export default function Home() {
   return (
     <main>
-      <ScrollHero src="/hero.mp4" scrollLengthVh={4} />
+      <ScrollHero src={`${basePath}/hero.mp4`} scrollLengthVh={4} />
 
       <section className="specs" id="specs">
         <p className="specs__label">X6 M Performance — Vitals</p>
