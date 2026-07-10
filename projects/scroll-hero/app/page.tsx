@@ -48,6 +48,7 @@ export default function Home() {
 
       <footer className="footer">
         <span>X6 · Scroll Study</span>
+        <span>Designed by Andrew Scotto</span>
         <span>Built with UI UX Pro Max</span>
       </footer>
     </main>

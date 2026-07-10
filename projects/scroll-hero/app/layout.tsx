@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   title: "X6 — Zero to Two Hundred",
   description:
     "A scroll-driven cinematic hero: the BMW X6 from standstill to 200 km/h, scrubbed frame by frame as you scroll.",
+  authors: [{ name: "Andrew Scotto" }],
 };
 
 export default function RootLayout({
