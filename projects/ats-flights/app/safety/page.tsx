@@ -66,11 +66,14 @@ export default function SafetyPage() {
           </h2>
         </div>
         <p className="safety__body">
-          For more than fifteen years, that discipline has carried VIPs,
-          executives, professional athletes, entertainers, and heads of state
-          — including over five years of U.S. Government operations with a
-          perfect safety and security track record. Safety isn&rsquo;t a
-          department at ATS; it is the operation.
+          ATS spent years as the premier operator for the U.S. Government —
+          and still flies for federal, state, and local agencies through its
+          GSA contract, with more than five years of government operations at
+          a perfect safety and security record. For over fifteen years that
+          same discipline has carried VIPs, executives, professional
+          athletes, entertainers, and heads of state to more than 160
+          countries. Safety isn&rsquo;t a department at ATS; it is the
+          operation.
         </p>
         <p className="safety__clientele">
           VIPs · Executives · Professional Athletes · Entertainers · Heads of State

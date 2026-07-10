@@ -5,6 +5,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer__row footer__row--links">
         <Link href="/">Home</Link>
+        <Link href="/about/">About</Link>
         <Link href="/fleet/">Fleet</Link>
         <Link href="/services/">Services</Link>
         <Link href="/safety/">Safety</Link>

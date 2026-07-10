@@ -14,8 +14,8 @@ const CERTIFICATIONS = [
 
 const STATS = [
   { value: "15+", unit: "years", label: "Trusted in private aviation" },
+  { value: "160+", unit: "countries", label: "Flown around the world" },
   { value: "6,200", unit: "nm", label: "Ultra-long Gulfstream range" },
-  { value: "5+", unit: "years", label: "U.S. Government flights, perfect record" },
   { value: "24 / 7", unit: "", label: "On-demand, worldwide" },
 ];
 
@@ -29,7 +29,7 @@ const EXPLORE = [
   {
     href: "/services/",
     name: "Services",
-    body: "On-demand charter, jet charter cards, and government operations — three ways to fly privately, all at the same standard.",
+    body: "On-demand charter, jet charter cards, government operations, and aircraft management — four ways to fly privately, all at the same standard.",
     cta: "See all services",
   },
   {
@@ -37,6 +37,12 @@ const EXPLORE = [
     name: "Safety",
     body: "One of the rare few operators to clear every bar: ARG/US Platinum, Wyvern, IS-BAO Stage 3, and FAA Part 5 SMS.",
     cta: "Our safety record",
+  },
+  {
+    href: "/about/",
+    name: "About ATS",
+    body: "Years as the premier operator for the U.S. Government, brought to the VIP charter market — with 160+ countries flown.",
+    cta: "Our story",
   },
 ];
 

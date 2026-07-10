@@ -545,6 +545,12 @@ body {
   gap: clamp(1.5rem, 4vw, 3rem);
 }
 
+/* Spec grid used inside a plain .section (which supplies its own padding) */
+.fleet__spec-grid--flush {
+  padding: 0;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
 .fleet__spec {
   border-top: 2px solid var(--ats-blue);
   padding-top: 1.25rem;

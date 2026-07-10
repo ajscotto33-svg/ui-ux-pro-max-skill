@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 export const metadata: Metadata = {
   title: "Our Fleet — ATS | Long-Range Gulfstream Aircraft",
   description:
-    "ATS operates long-range Gulfstream aircraft worldwide — the ultra-long-range Gulfstream V with 14 seats, 5 berths, and 6,200 nm of non-stop range.",
+    "ATS operates long-range Gulfstream aircraft worldwide — GV and GIVSP airframes with intercontinental range, sleeping accommodations, WiFi, and in-house maintenance.",
 };
 
 export default function FleetPage() {
@@ -22,15 +22,17 @@ export default function FleetPage() {
           <span>flown worldwide.</span>
         </h1>
         <p className="page-hero__lead">
-          ATS operates long-range Gulfstream aircraft across the globe. Every
-          airframe in the fleet is maintained, crewed, and operated to the same
-          standard that earned our safety ratings.
+          ATS operates several large, long-range Gulfstream aircraft with
+          worldwide operational authority. Every airframe is kept by our own
+          in-house maintenance department to the standard our safety ratings
+          demand.
         </p>
       </section>
 
+      {/* Gulfstream V */}
       <section className="fleet">
         <div className="fleet__intro">
-          <p className="section__eyebrow">Flagship</p>
+          <p className="section__eyebrow">Flagship — Gulfstream V</p>
           <h2 className="section__title">
             The Gulfstream&nbsp;V.
             <br />
@@ -39,9 +41,10 @@ export default function FleetPage() {
           <p className="fleet__lead">
             With an ultra-long range of up to 6,200 nautical miles, the
             Gulfstream V has been the only choice for business and leisure
-            travelers flying around the world. For flights over ten hours, a
-            dedicated crew-rest area keeps the operation as fresh at hour
-            twelve as at wheels-up.
+            travelers flying around the world. Multiple GVs fly on the ATS
+            certificate — including N176SM and N585D — and for flights over
+            ten hours, a dedicated crew-rest area keeps the operation as fresh
+            at hour twelve as at wheels-up.
           </p>
         </div>
         <div className="fleet__spec-grid">
@@ -68,27 +71,71 @@ export default function FleetPage() {
         </div>
       </section>
 
+      {/* Gulfstream IVSP */}
       <section className="section">
         <div className="section__head">
-          <p className="section__eyebrow">In the hangar</p>
+          <p className="section__eyebrow">Gulfstream IVSP — N415MA</p>
           <h2 className="section__title">
-            A growing <span>Gulfstream family.</span>
+            The IVSP. <span>Performance, refined.</span>
+          </h2>
+          <p className="fleet__lead">
+            Added to the ATS certificate in under 20 days thanks to our
+            ability to self-conform, the Gulfstream IVSP N415MA carries
+            entertainment systems, Airshow, and domestic WiFi — with all the
+            amenities you would expect on board.
+          </p>
+        </div>
+        <div className="fleet__spec-grid fleet__spec-grid--flush">
+          <div className="fleet__spec">
+            <p className="fleet__spec-value">
+              4,200<span> nm</span>
+            </p>
+            <p className="fleet__spec-label">Maximum range</p>
+          </div>
+          <div className="fleet__spec">
+            <p className="fleet__spec-value">
+              450<span> kts</span>
+            </p>
+            <p className="fleet__spec-label">Cruising speed</p>
+          </div>
+          <div className="fleet__spec">
+            <p className="fleet__spec-value">
+              45,000<span> ft</span>
+            </p>
+            <p className="fleet__spec-label">Maximum altitude</p>
+          </div>
+          <div className="fleet__spec">
+            <p className="fleet__spec-value">
+              13<span> pax</span>
+            </p>
+            <p className="fleet__spec-label">Seats, sleeping for 6</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Operations behind the fleet */}
+      <section className="section">
+        <div className="section__head">
+          <p className="section__eyebrow">Behind the hangar doors</p>
+          <h2 className="section__title">
+            An operation, <span>not just airplanes.</span>
           </h2>
         </div>
         <div className="services">
           <article className="service-card">
-            <h3 className="service-card__name">Gulfstream V</h3>
+            <h3 className="service-card__name">In-house maintenance</h3>
             <p className="service-card__body">
-              Multiple GVs in the fleet — including N176SM and N585D — with
-              full sleeping accommodations for intercontinental flights. WiFi
-              available on board.
+              ATS runs its own maintenance department, keeping every airframe
+              to ARG/US Platinum and IS-BAO Stage 3 standards — and enabling
+              new aircraft to join the certificate in under 20 days.
             </p>
           </article>
           <article className="service-card">
-            <h3 className="service-card__name">Gulfstream IV</h3>
+            <h3 className="service-card__name">Worldwide authority</h3>
             <p className="service-card__body">
-              The proven workhorse of executive aviation: transcontinental
-              range with the cabin comfort the Gulfstream line is known for.
+              Worldwide operational authority and missions flown to more than
+              160 countries — the most challenging routes are the ones this
+              fleet was assembled for.
             </p>
           </article>
           <article className="service-card">
@@ -96,7 +143,7 @@ export default function FleetPage() {
             <p className="service-card__body">
               Every charter is matched to the right airframe for your route,
               passenger count, and schedule — with specialized one-way pricing
-              where it fits.
+              where it fits, and WiFi available on board.
             </p>
           </article>
         </div>

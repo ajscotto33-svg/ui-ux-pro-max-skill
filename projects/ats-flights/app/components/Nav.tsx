@@ -12,6 +12,7 @@ export default function Nav() {
         <span className="nav__brand-sub">Aircraft Transport Service</span>
       </Link>
       <nav className="nav__links">
+        <Link href="/about/">About</Link>
         <Link href="/fleet/">Fleet</Link>
         <Link href="/services/">Services</Link>
         <Link href="/safety/">Safety</Link>
