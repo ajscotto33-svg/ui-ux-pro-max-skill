@@ -113,6 +113,79 @@ export default function FleetPage() {
         </div>
       </section>
 
+      {/* Full roster */}
+      <section className="section">
+        <div className="section__head">
+          <p className="section__eyebrow">The roster</p>
+          <h2 className="section__title">
+            Every tail on the <span>certificate.</span>
+          </h2>
+          <p className="fleet__lead">
+            A growing fleet — two additional Gulfstream Vs joined in a single
+            60-day span — kept mission-ready by our in-house maintenance team.
+          </p>
+        </div>
+        <div className="services">
+          <article className="service-card">
+            <h3 className="service-card__name">Gulfstream V — N176SM</h3>
+            <p className="service-card__body">
+              A shining example of the GV: 14 passenger seats and sleeping
+              accommodations with 5 beds for true intercontinental missions.
+            </p>
+          </article>
+          <article className="service-card">
+            <h3 className="service-card__name">Gulfstream V — N585D</h3>
+            <p className="service-card__body">
+              16-passenger executive configuration in light cream leather —
+              forward and mid-cabin four-place clubs, aft split cabin with
+              dual divans for privacy, forward crew rest, and a full galley
+              with high-temperature oven, microwave, and coffeemaker.
+            </p>
+          </article>
+          <article className="service-card">
+            <h3 className="service-card__name">Gulfstream V — N808JG</h3>
+            <p className="service-card__body">
+              An intimate 8-seat GV configuration that sleeps 5 — the same
+              worldwide range, arranged for smaller parties who want the
+              cabin to themselves.
+            </p>
+          </article>
+          <article className="service-card">
+            <h3 className="service-card__name">Gulfstream IVSP — N415MA</h3>
+            <p className="service-card__body">
+              13 passengers with sleeping for 6, plus entertainment systems,
+              Airshow, and domestic WiFi. Added to the certificate in under
+              20 days.
+            </p>
+          </article>
+          <article className="service-card">
+            <h3 className="service-card__name">Gulfstream IVSP — N999AH</h3>
+            <p className="service-card__body">
+              16-passenger configuration with three separate seating areas —
+              forward and aft four-place divans opposite two-place clubs,
+              mid-cabin conference seating — a full-service aft galley, and a
+              large aft lavatory with vanity.
+            </p>
+          </article>
+          <article className="service-card">
+            <h3 className="service-card__name">Gulfstream IVSP — N999TR</h3>
+            <p className="service-card__body">
+              Another IVSP on the ATS certificate, extending availability of
+              the type&rsquo;s 4,200 nm transcontinental reach across the
+              schedule.
+            </p>
+          </article>
+          <article className="service-card">
+            <h3 className="service-card__name">Gulfstream 450</h3>
+            <p className="service-card__body">
+              The GIV&rsquo;s modern successor, available within the ATS
+              fleet options — continuing the same long-range Gulfstream
+              lineage the operation is built on.
+            </p>
+          </article>
+        </div>
+      </section>
+
       {/* Operations behind the fleet */}
       <section className="section">
         <div className="section__head">
