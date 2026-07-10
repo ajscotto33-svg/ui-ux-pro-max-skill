@@ -1,0 +1,300 @@
+:root {
+  /* Cinematic dark — never pure #000 (OLED smear, crushed grain) */
+  --bg-deep: #030304;
+  --bg-base: #08080a;
+  --bg-elevated: #101014;
+  --foreground: #ededef;
+  --foreground-muted: #8a8f98;
+  --border: rgba(255, 255, 255, 0.08);
+  /* Miami sunset */
+  --accent: #ff6b1a;
+  --accent-soft: #ffa25c;
+  --accent-glow: rgba(255, 107, 26, 0.25);
+  --easing: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-deep);
+  color: var(--foreground);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------- */
+/* ScrollHero                                                        */
+/* ---------------------------------------------------------------- */
+
+.scroll-hero {
+  position: relative;
+}
+
+.scroll-hero__stage {
+  --progress: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+
+.scroll-hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Sunset gradient stand-in when hero.mp4 is missing or fails to load */
+.scroll-hero__fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 80% 55% at 50% 78%,
+      rgba(255, 107, 26, 0.55),
+      transparent 70%
+    ),
+    linear-gradient(180deg, #06060a 0%, #14090c 55%, #3a1508 85%, #7a3010 100%);
+}
+
+.scroll-hero__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(3, 3, 4, 0.55) 0%, transparent 30%),
+    linear-gradient(0deg, rgba(3, 3, 4, 0.7) 0%, transparent 35%);
+}
+
+.scroll-hero__copy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(1.5rem, 5vw, 5rem);
+  pointer-events: none;
+}
+
+.scroll-hero__copy .scroll-hero__cta {
+  pointer-events: auto;
+}
+
+/*
+ * Copy phases are pure CSS functions of --progress (set by the component
+ * every frame): each block fades through its own window of the scrub.
+ *   intro:  visible 0.00 → 0.25
+ *   mid:    visible 0.35 → 0.60
+ *   outro:  visible 0.75 → 1.00
+ */
+.scroll-hero__copy--intro {
+  opacity: clamp(0, calc(1 - (var(--progress) - 0.15) / 0.1), 1);
+  transform: translateY(calc(var(--progress) * -6rem));
+}
+
+.scroll-hero__copy--mid {
+  align-items: flex-end;
+  text-align: right;
+  opacity: clamp(
+    0,
+    min(
+      calc((var(--progress) - 0.35) / 0.08),
+      calc(1 - (var(--progress) - 0.52) / 0.08)
+    ),
+    1
+  );
+  transform: translateY(calc((0.5 - var(--progress)) * 4rem));
+}
+
+.scroll-hero__copy--outro {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: clamp(0, calc((var(--progress) - 0.75) / 0.12), 1);
+  transform: translateY(calc((1 - var(--progress)) * 3rem));
+}
+
+.scroll-hero__eyebrow {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  margin-bottom: 1rem;
+}
+
+.scroll-hero__title {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.6rem, 4.5vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 24px rgba(3, 3, 4, 0.6);
+}
+
+.scroll-hero__title span {
+  color: var(--accent);
+}
+
+.scroll-hero__title--right {
+  text-align: right;
+}
+
+.scroll-hero__hint {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+  margin-top: 1.5rem;
+  animation: hint-bob 2.2s var(--easing) infinite;
+}
+
+@keyframes hint-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(0.5rem);
+  }
+}
+
+.scroll-hero__cta {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 1rem 2.5rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--bg-deep);
+  background: var(--accent);
+  border-radius: 999px;
+  box-shadow: 0 0 48px var(--accent-glow);
+  transition: transform 0.4s var(--easing), box-shadow 0.4s var(--easing);
+}
+
+.scroll-hero__cta:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 72px var(--accent-glow);
+}
+
+/* ---------------------------------------------------------------- */
+/* Post-hero sections                                                */
+/* ---------------------------------------------------------------- */
+
+.specs {
+  padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 5vw, 5rem);
+  background: var(--bg-base);
+  border-top: 1px solid var(--border);
+}
+
+.specs__label {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  margin-bottom: 3rem;
+}
+
+.specs__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.spec-card {
+  background: var(--bg-elevated);
+  padding: 2.5rem 2rem;
+}
+
+.spec-card__value {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.spec-card__value span {
+  font-size: 0.5em;
+  color: var(--accent);
+}
+
+.spec-card__name {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+  margin-top: 0.75rem;
+}
+
+.statement {
+  padding: clamp(5rem, 14vw, 10rem) clamp(1.5rem, 5vw, 5rem);
+  max-width: 60rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.statement p {
+  font-size: clamp(1.3rem, 2.6vw, 2rem);
+  line-height: 1.5;
+  color: var(--foreground-muted);
+}
+
+.statement p strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.footer {
+  padding: 3rem clamp(1.5rem, 5vw, 5rem);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .scroll-hero__hint {
+    animation: none;
+  }
+  /* Component plays the video normally and pins --progress to 1 */
+  .scroll-hero {
+    height: 100vh !important;
+  }
+  .scroll-hero__copy--intro,
+  .scroll-hero__copy--mid {
+    display: none;
+  }
+}
