@@ -1,6 +1,7 @@
 /* =========================================================
    Andrew Scotto | Douglas Elliman — interactions
-   - Apple-style scroll-scrubbed hero video (GSAP ScrollTrigger)
+   - Apple-style scroll-scrubbed hero (canvas frame sequence,
+     with video-seek and static fallbacks)
    - Transparent → solid navigation
    - Scroll reveals, stat counters, testimonial carousel
    - Leaflet service-area map
@@ -18,17 +19,23 @@
   if (hasGSAP) gsap.registerPlugin(ScrollTrigger);
 
   /* ------------------------------------------------------
-     HERO VIDEO — remote fallback when local asset is absent
+     HERO — three rendering modes, best available wins:
+     1. Canvas frame sequence (assets/frames/) — zero-latency scrub
+     2. Video currentTime scrub (assets/hero.mp4 or remote)
+     3. Static hero (reduced motion, no GSAP, or nothing loads)
      ------------------------------------------------------ */
   var REMOTE_HERO_URL =
     "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_135642_55558543-6c58-47e0-b1d1-e032b1111a69.mp4";
+  var FRAMES_BASE = "assets/frames/";
 
   var hero = document.getElementById("hero");
   var video = document.getElementById("heroVideo");
+  var canvas = document.getElementById("heroCanvas");
+  var canvasMode = false;
   var triedRemote = false;
 
   function useRemoteSource() {
-    if (triedRemote) return;
+    if (triedRemote || canvasMode) return;
     triedRemote = true;
     video.innerHTML = "";
     video.src = REMOTE_HERO_URL;
@@ -36,26 +43,38 @@
     // Last resort: no video at all — collapse to a static hero so the
     // headline and CTA still render over the navy backdrop.
     setTimeout(function () {
-      if (video.readyState === 0) staticHero();
+      if (video.readyState === 0 && !canvasMode) staticHero();
     }, 2500);
   }
-  video.addEventListener("error", useRemoteSource);
+  video.addEventListener("error", function () { useRemoteSource(); });
   var localSource = document.getElementById("heroSourceLocal");
-  if (localSource) localSource.addEventListener("error", useRemoteSource);
-  // Safety net: if metadata never arrives, swap to remote.
+  if (localSource) localSource.addEventListener("error", function () { useRemoteSource(); });
   setTimeout(function () {
-    if (video.readyState === 0) useRemoteSource();
+    if (video.readyState === 0 && !canvasMode) useRemoteSource();
   }, 1500);
 
-  /* ------------------------------------------------------
-     HERO SCRUB — video.currentTime follows scroll progress,
-     smoothed with a lerp so seeks feel fluid.
-     ------------------------------------------------------ */
   var captions = [
     document.querySelector(".hero__caption--1"),
     document.querySelector(".hero__caption--2"),
     document.querySelector(".hero__caption--3")
   ];
+
+  var activeCaption = -1;
+  function setCaption(progress) {
+    var idx = progress < 0.3 ? 0 : progress < 0.68 ? 1 : 2;
+    if (idx === activeCaption) return;
+    activeCaption = idx;
+    captions.forEach(function (c, i) {
+      if (!c) return;
+      gsap.to(c, {
+        opacity: i === idx ? 1 : 0,
+        y: i === idx ? 0 : 24,
+        duration: 0.55,
+        ease: "power2.out",
+        overwrite: true
+      });
+    });
+  }
 
   function staticHero() {
     hero.classList.add("hero--static");
@@ -71,6 +90,125 @@
     if (hasGSAP) ScrollTrigger.refresh();
   }
 
+  // Shared scroll runway: drives captions, scroll cue, and the
+  // mode-specific frame/time callback.
+  function createHeroTrigger(onProgress) {
+    ScrollTrigger.create({
+      trigger: hero,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: true,
+      onUpdate: function (self) {
+        onProgress(self.progress);
+        setCaption(self.progress);
+      }
+    });
+    gsap.to(".hero__scrollcue", {
+      opacity: 0,
+      scrollTrigger: { trigger: hero, start: "5% top", end: "12% top", scrub: true }
+    });
+    setCaption(0);
+  }
+
+  /* --- Mode 1: canvas frame sequence ------------------- */
+  function initCanvasScrub(frameCount) {
+    canvasMode = true;
+    hero.classList.add("hero--canvas");
+    // Stop the fallback video from downloading — the frames replace it.
+    try {
+      video.preload = "none";
+      video.removeAttribute("src");
+      video.innerHTML = "";
+      video.load();
+    } catch (e) {}
+
+    var ctx = canvas.getContext("2d");
+    var images = new Array(frameCount);
+    var loaded = new Array(frameCount);
+    var currentDrawn = -1;
+
+    function frameSrc(i) {
+      var n = String(i + 1);
+      while (n.length < 4) n = "0" + n;
+      return FRAMES_BASE + "frame_" + n + ".jpg";
+    }
+
+    function drawFrame(i) {
+      var img = images[i];
+      if (!img || !loaded[i]) return;
+      var cw = canvas.width, ch = canvas.height;
+      var iw = img.naturalWidth, ih = img.naturalHeight;
+      if (!cw || !ch || !iw || !ih) return;
+      var scale = Math.max(cw / iw, ch / ih);
+      var dw = iw * scale, dh = ih * scale;
+      ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+      currentDrawn = i;
+    }
+
+    function nearestLoaded(i) {
+      if (loaded[i]) return i;
+      for (var d = 1; d < frameCount; d++) {
+        if (i - d >= 0 && loaded[i - d]) return i - d;
+        if (i + d < frameCount && loaded[i + d]) return i + d;
+      }
+      return -1;
+    }
+
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(canvas.clientWidth * dpr);
+      canvas.height = Math.round(canvas.clientHeight * dpr);
+      if (currentDrawn >= 0) drawFrame(currentDrawn);
+      else { var n = nearestLoaded(0); if (n >= 0) drawFrame(n); }
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    // Preload every frame; paint frame 0 as soon as it lands.
+    var firstFrameFailed = false;
+    for (var i = 0; i < frameCount; i++) {
+      (function (i) {
+        var img = new Image();
+        img.decoding = "async";
+        img.onload = function () {
+          loaded[i] = true;
+          if (i === 0 && currentDrawn < 0) drawFrame(0);
+        };
+        img.onerror = function () {
+          if (i === 0) firstFrameFailed = true;
+        };
+        img.src = frameSrc(i);
+        images[i] = img;
+      })(i);
+    }
+
+    var target = 0;
+    var current = 0;
+    var rafId = null;
+
+    function tick() {
+      var delta = target - current;
+      current += delta * 0.28;
+      var idx = Math.round(current);
+      var drawIdx = nearestLoaded(Math.max(0, Math.min(frameCount - 1, idx)));
+      if (drawIdx >= 0 && drawIdx !== currentDrawn) drawFrame(drawIdx);
+      if (Math.abs(delta) > 0.25) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        rafId = null;
+      }
+    }
+    function requestTick() {
+      if (rafId === null) rafId = requestAnimationFrame(tick);
+    }
+
+    createHeroTrigger(function (progress) {
+      target = progress * (frameCount - 1);
+      requestTick();
+    });
+  }
+
+  /* --- Mode 2: video currentTime scrub ------------------ */
   function initScrubHero() {
     var duration = video.duration;
     if (!duration || !isFinite(duration)) { staticHero(); return; }
@@ -97,55 +235,33 @@
       if (rafId === null) rafId = requestAnimationFrame(tick);
     }
 
-    ScrollTrigger.create({
-      trigger: hero,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: true,
-      onUpdate: function (self) {
-        targetTime = self.progress * (duration - 0.06);
-        requestTick();
-
-        // Caption choreography by progress band
-        setCaption(self.progress);
-      }
-    });
-
-    var activeCaption = -1;
-    function setCaption(progress) {
-      var idx = progress < 0.3 ? 0 : progress < 0.68 ? 1 : 2;
-      if (idx === activeCaption) return;
-      activeCaption = idx;
-      captions.forEach(function (c, i) {
-        if (!c) return;
-        gsap.to(c, {
-          opacity: i === idx ? 1 : 0,
-          y: i === idx ? 0 : 24,
-          duration: 0.55,
-          ease: "power2.out",
-          overwrite: true
-        });
-      });
-    }
-    setCaption(0);
-
-    // Hide scroll cue once the story begins
-    gsap.to(".hero__scrollcue", {
-      opacity: 0,
-      scrollTrigger: { trigger: hero, start: "5% top", end: "12% top", scrub: true }
+    createHeroTrigger(function (progress) {
+      targetTime = progress * (duration - 0.06);
+      requestTick();
     });
 
     // Ensure first frame is painted
     try { video.currentTime = 0.001; } catch (e) {}
   }
 
+  /* --- Mode selection ----------------------------------- */
   if (prefersReducedMotion || !hasGSAP) {
     if (video.readyState >= 1) staticHero();
     else video.addEventListener("loadedmetadata", staticHero, { once: true });
-  } else if (video.readyState >= 1) {
-    initScrubHero();
   } else {
-    video.addEventListener("loadedmetadata", initScrubHero, { once: true });
+    fetch(FRAMES_BASE + "manifest.json")
+      .then(function (r) {
+        if (!r.ok) throw new Error("no manifest");
+        return r.json();
+      })
+      .then(function (m) {
+        if (m && m.count > 1) initCanvasScrub(m.count);
+        else throw new Error("bad manifest");
+      })
+      .catch(function () {
+        if (video.readyState >= 1) initScrubHero();
+        else video.addEventListener("loadedmetadata", initScrubHero, { once: true });
+      });
   }
 
   /* ------------------------------------------------------

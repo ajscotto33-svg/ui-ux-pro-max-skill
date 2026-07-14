@@ -270,6 +270,15 @@ input, textarea { cursor: text; }
   height: 100%;
   object-fit: cover;
 }
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+.hero--canvas .hero__canvas { display: block; }
+.hero--canvas .hero__video { display: none; }
 .hero__shade {
   position: absolute;
   inset: 0;

@@ -53,14 +53,24 @@ jobs:
           }
           cd projects/andrew-scotto-realty/assets
           if [ -f hero-original.mp4 ]; then
+            # All-keyframe mp4: fallback player + reduced-motion static hero
             ffmpeg -y -i hero-original.mp4 -an \
               -c:v libx264 -profile:v high -crf 23 \
               -g 1 -keyint_min 1 -sc_threshold 0 \
               -pix_fmt yuv420p -movflags +faststart \
               hero.mp4 || cp hero-original.mp4 hero.mp4
+            # JPEG frame sequence for the canvas scrub (zero seek latency)
+            mkdir -p frames
+            if ffmpeg -y -i hero-original.mp4 -vf "fps=15,scale=1600:-2" -q:v 3 frames/frame_%04d.jpg; then
+              COUNT=$(ls frames/frame_*.jpg | wc -l | tr -d ' ')
+              printf '{"count": %s}\n' "$COUNT" > frames/manifest.json
+              echo "Extracted $COUNT frames"
+            else
+              rm -rf frames
+            fi
             rm -f hero-original.mp4
           fi
-          ls -la .
+          ls -la . frames 2>/dev/null || true
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
