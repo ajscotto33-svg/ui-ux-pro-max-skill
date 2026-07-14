@@ -83,7 +83,7 @@ jobs:
             "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_135642_55558543-6c58-47e0-b1d1-e032b1111a69.mp4"
           # Azure: drop the static tail (keep 11s) and run slightly faster
           prepare "_site/azure" \
-            "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_144513_40f5e36e-c458-45e8-9020-380a20e6a7db.mp4" \
+            "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_150621_fe761e14-cf7f-4043-a8fc-e1bc99ba797c.mp4" \
             11 1.15
           du -sh _site _site/azure || true
 
