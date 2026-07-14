@@ -87,6 +87,36 @@ jobs:
             11 1.15
           du -sh _site _site/azure || true
 
+      # Property, interior, and neighborhood photography for the Azure site.
+      # Fetched at deploy time and converted to JPG (CDN links can expire;
+      # the page markup degrades gracefully to gradients if any are missing).
+      - name: Prepare Azure images
+        continue-on-error: true
+        run: |
+          command -v ffmpeg >/dev/null || {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          }
+          IMGDIR="_site/azure/assets/img"
+          mkdir -p "$IMGDIR"
+          BASE="https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP"
+          fetch_img() {
+            name="$1"; url="$2"
+            if curl -fL --retry 3 --max-time 60 -o "/tmp/$name.src" "$url"; then
+              ffmpeg -y -i "/tmp/$name.src" -q:v 3 "$IMGDIR/$name.jpg" \
+                || cp "/tmp/$name.src" "$IMGDIR/$name.jpg"
+            fi
+          }
+          fetch_img prop-bayfront    "$BASE/hf_20260714_152312_42f564c4-f6d7-4ff5-9c4d-55f50d74b49b.png"
+          fetch_img prop-penthouse   "$BASE/hf_20260714_152321_ea634718-b2a6-472f-ada1-c4448074db36.png"
+          fetch_img prop-villa       "$BASE/hf_20260714_152331_686ce2a5-0b0c-419b-92c2-e5225de6c81c.png"
+          fetch_img about-interior   "$BASE/hf_20260714_152339_df20193c-1d45-4682-bf0b-42c6ab417efd.png"
+          fetch_img hood-miami-beach "$BASE/hf_20260714_152355_d25575a3-911c-4b37-9f80-fc77493ddc06.png"
+          fetch_img hood-brickell    "$BASE/hf_20260714_152403_7e1f146f-0f1f-4879-8bc0-229d0ea51cf2.png"
+          fetch_img hood-coral-gables "$BASE/hf_20260714_152412_445e26f7-bc15-4909-8ec3-2d5479cfed8b.png"
+          fetch_img hood-key-biscayne "$BASE/hf_20260714_152423_3caf6df1-600a-4210-a6f0-f3b69ab39799.png"
+          ls -la "$IMGDIR" || true
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:

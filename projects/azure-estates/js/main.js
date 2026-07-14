@@ -337,15 +337,17 @@
         if (!entry.isIntersecting || counted.has(entry.target)) return;
         counted.add(entry.target);
         var el = entry.target;
-        var end = parseInt(el.getAttribute("data-count"), 10) || 0;
-        if (prefersReducedMotion) { el.textContent = end; return; }
+        var decimals = parseInt(el.getAttribute("data-decimals"), 10) || 0;
+        var end = parseFloat(el.getAttribute("data-count")) || 0;
+        function fmt(v) { return decimals ? v.toFixed(decimals) : Math.round(v); }
+        if (prefersReducedMotion) { el.textContent = fmt(end); return; }
         var startTs = null;
         var durationMs = 1400;
         function step(ts) {
           if (!startTs) startTs = ts;
           var t = Math.min((ts - startTs) / durationMs, 1);
           var eased = 1 - Math.pow(1 - t, 3);
-          el.textContent = Math.round(end * eased);
+          el.textContent = fmt(end * eased);
           if (t < 1) requestAnimationFrame(step);
         }
         requestAnimationFrame(step);
