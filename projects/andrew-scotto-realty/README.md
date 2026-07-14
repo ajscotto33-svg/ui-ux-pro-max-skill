@@ -15,7 +15,7 @@ python3 -m http.server 8080
 The page loads `assets/hero.mp4` first and automatically falls back to the generated Higgsfield CDN URL if the local file is missing. CDN links can expire, so drop the file in locally:
 
 ```bash
-curl -L -o assets/hero.mp4 "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_144451_dd12aefe-37fe-4ffa-9ac9-dadc9ed1ba29.mp4"
+curl -L -o assets/hero.mp4 "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_135642_55558543-6c58-47e0-b1d1-e032b1111a69.mp4"
 ```
 
 **For buttery-smooth scroll scrubbing**, re-encode so every frame is a keyframe (browsers seek instantly then):
