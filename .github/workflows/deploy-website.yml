@@ -47,6 +47,10 @@ jobs:
       - name: Optimize hero video for scroll scrubbing
         continue-on-error: true
         run: |
+          command -v ffmpeg >/dev/null || {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          }
           cd projects/andrew-scotto-realty/assets
           if [ -f hero-original.mp4 ]; then
             ffmpeg -y -i hero-original.mp4 -an \
