@@ -43,13 +43,23 @@ ffmpeg -i assets/hero-original.mp4 -vf "fps=15,scale=1600:-2" -q:v 3 assets/fram
 printf '{"count": %s}\n' "$(ls assets/frames/frame_*.jpg | wc -l)" > assets/frames/manifest.json
 ```
 
+## Boat photography (`assets/img/`)
+
+One distinct exterior photo per yacht, generated to match each builder and
+size (`yacht-aurelia`, `yacht-meridian`, `yacht-serene`, `yacht-lareina`,
+`yacht-odyssey`, `yacht-celestia`). Each vessel's image is reused on both its
+Featured Yachts card and its Charter card, and Aurelia's also drives the
+detail-page hero and lead gallery tile. Fetched from the Higgsfield CDN and
+converted to JPG at deploy time.
+
 ## Editorial stills (`assets/stills/`)
 
-Six first-party photos pulled straight from the hero footage at deploy time
+Six first-party frames pulled straight from the hero footage at deploy time
 (`still-approach`, `still-hull`, `still-aft`, `still-deck`, `still-salon`,
-`still-foredeck`). They back the yacht cards, charter cards, gallery and
-detail page. Every image element also carries a **CSS gradient fallback**,
-so a missing still degrades to an intentional gradient — never a broken image.
+`still-foredeck`) — used for the interior/deck shots in the detail-page gallery.
+
+Every image element carries a **CSS background-color + gradient fallback**, so a
+missing image degrades to an intentional dark panel — never a broken image.
 
 ## Structure
 

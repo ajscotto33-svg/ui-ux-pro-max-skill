@@ -120,6 +120,35 @@ jobs:
           fi
           ls -la "$STILLS" || true
 
+      # AS Yachts: one distinct exterior photo per featured/charter yacht,
+      # generated to match each builder & size. Fetched at deploy and
+      # converted to JPG. Every card also has a CSS colour fallback, so a
+      # missing image degrades to an intentional dark panel, never a break.
+      - name: Prepare AS Yachts boat images
+        continue-on-error: true
+        run: |
+          command -v ffmpeg >/dev/null || {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          }
+          IMGDIR="_site/yachts/assets/img"
+          mkdir -p "$IMGDIR"
+          BASE="https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP"
+          fetch_img() {
+            name="$1"; url="$2"
+            if curl -fL --retry 3 --max-time 60 -o "/tmp/$name.src" "$url"; then
+              ffmpeg -y -i "/tmp/$name.src" -q:v 3 "$IMGDIR/$name.jpg" \
+                || cp "/tmp/$name.src" "$IMGDIR/$name.jpg"
+            fi
+          }
+          fetch_img yacht-aurelia  "$BASE/hf_20260714_222643_c94bf0fa-e206-4fb8-98c7-c6276fa1cbd6.png"
+          fetch_img yacht-meridian "$BASE/hf_20260714_222645_f5d978dd-6a79-40e5-8161-a3b4b31cc968.png"
+          fetch_img yacht-serene   "$BASE/hf_20260714_222648_ac64efd4-5148-475d-9e78-fd957ddfa4e0.png"
+          fetch_img yacht-lareina  "$BASE/hf_20260714_222649_63f7d40d-d764-4edb-b2c0-1c4290e87241.png"
+          fetch_img yacht-odyssey  "$BASE/hf_20260714_223550_e9021754-3a73-4325-b388-6c4c8b080577.png"
+          fetch_img yacht-celestia "$BASE/hf_20260714_223553_9cbdb006-80d5-4b9f-b93d-c8df2a7ce86c.png"
+          ls -la "$IMGDIR" || true
+
       # Property, interior, and neighborhood photography for the Azure site.
       # Fetched at deploy time and converted to JPG (CDN links can expire;
       # the page markup degrades gracefully to gradients if any are missing).
