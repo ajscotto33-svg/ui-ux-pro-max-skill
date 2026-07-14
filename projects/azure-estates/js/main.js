@@ -25,7 +25,7 @@
      3. Static hero (reduced motion, no GSAP, or nothing loads)
      ------------------------------------------------------ */
   var REMOTE_HERO_URL =
-    "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_150621_fe761e14-cf7f-4043-a8fc-e1bc99ba797c.mp4";
+    "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_144513_40f5e36e-c458-45e8-9020-380a20e6a7db.mp4";
   var FRAMES_BASE = "assets/frames/";
 
   var hero = document.getElementById("hero");
