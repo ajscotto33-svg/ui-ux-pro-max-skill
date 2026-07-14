@@ -254,7 +254,7 @@ input, textarea { cursor: text; }
 .hero { position: relative; }
 /* The wrapper height creates scroll runway; ScrollTrigger pins the sticky child.
    Fallback (no JS): sticky keeps video pinned for the runway. */
-.hero { height: 500vh; }
+.hero { height: 400vh; }
 .hero__sticky {
   position: sticky;
   top: 0;

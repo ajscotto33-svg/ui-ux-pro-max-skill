@@ -50,20 +50,26 @@ jobs:
             sudo apt-get update -qq
             sudo apt-get install -y -qq ffmpeg
           }
+          # prepare <dir> <url> [trim-seconds] [speed-factor]
+          # trim: keep only the first N seconds of the source
+          # speed: play the footage this much faster (1 = unchanged)
           prepare() {
-            sitedir="$1"; url="$2"
+            sitedir="$1"; url="$2"; trim="${3:-}"; speed="${4:-1}"
             mkdir -p "$sitedir/assets"
             curl -fL --retry 3 --max-time 180 \
               -o "$sitedir/assets/hero-original.mp4" "$url" || return 0
             (
               cd "$sitedir/assets"
-              ffmpeg -y -i hero-original.mp4 -an \
+              TRIMARG=""
+              [ -n "$trim" ] && TRIMARG="-t $trim"
+              ffmpeg -y $TRIMARG -i hero-original.mp4 -an \
+                -vf "setpts=PTS/$speed" \
                 -c:v libx264 -profile:v high -crf 23 \
                 -g 1 -keyint_min 1 -sc_threshold 0 \
                 -pix_fmt yuv420p -movflags +faststart \
                 hero.mp4 || cp hero-original.mp4 hero.mp4
               mkdir -p frames
-              if ffmpeg -y -i hero-original.mp4 -vf "fps=15,scale=1600:-2" -q:v 3 frames/frame_%04d.jpg; then
+              if ffmpeg -y $TRIMARG -i hero-original.mp4 -vf "setpts=PTS/$speed,fps=15,scale=1600:-2" -q:v 3 frames/frame_%04d.jpg; then
                 COUNT=$(ls frames/frame_*.jpg | wc -l | tr -d ' ')
                 printf '{"count": %s}\n' "$COUNT" > frames/manifest.json
                 echo "$sitedir: extracted $COUNT frames"
@@ -75,8 +81,10 @@ jobs:
           }
           prepare "_site" \
             "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_135642_55558543-6c58-47e0-b1d1-e032b1111a69.mp4"
+          # Azure: drop the static tail (keep 11s) and run slightly faster
           prepare "_site/azure" \
-            "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_144513_40f5e36e-c458-45e8-9020-380a20e6a7db.mp4"
+            "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_144513_40f5e36e-c458-45e8-9020-380a20e6a7db.mp4" \
+            11 1.15
           du -sh _site _site/azure || true
 
       - name: Configure Pages
