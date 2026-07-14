@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AS Yachts — Private Yacht Brokerage &amp; Charter</title>
+  <meta name="description" content="AS Yachts is a private brokerage house for the world's finest superyachts — sales, charter, new construction and discreet representation across the Mediterranean, Caribbean and beyond." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- scroll-progress beam -->
+  <div class="scrollbeam" id="scrollbeam" aria-hidden="true"></div>
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <nav class="nav" id="nav" aria-label="Primary">
+    <div class="nav__inner container">
+      <a class="nav__brand" href="index.html" aria-label="AS Yachts — home">
+        <span class="nav__mark">AS</span>
+        <span class="nav__markSub">Yachts</span>
+      </a>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#fleet">Yachts</a></li>
+        <li><a href="#buy">Buy</a></li>
+        <li><a href="#sell">Sell</a></li>
+        <li><a href="#charter">Charter</a></li>
+        <li><a href="#destinations">Destinations</a></li>
+        <li><a href="#expertise">Expertise</a></li>
+        <li><a class="nav__cta" href="#contact">Enquire</a></li>
+      </ul>
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks">
+        <span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO (scroll-scrubbed) ===================== -->
+  <header class="hero" id="hero">
+    <div class="hero__sticky">
+      <video class="hero__video" id="heroVideo" muted playsinline preload="auto" poster="assets/stills/still-approach.jpg">
+        <source id="heroSourceLocal" src="assets/hero.mp4" type="video/mp4" />
+      </video>
+      <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+      <div class="hero__shade" aria-hidden="true"></div>
+
+      <div class="hero__captions">
+        <div class="hero__caption hero__caption--1">
+          <p class="eyebrow eyebrow--gold">AS Yachts</p>
+          <h1 class="hero__title">Beyond Ownership</h1>
+          <p class="hero__sub">Private Brokerage &amp; Charter</p>
+        </div>
+        <div class="hero__caption hero__caption--2">
+          <h1 class="hero__title">A New Standard at Sea</h1>
+          <p class="hero__sub">150 – 300ft · Fully Custom</p>
+        </div>
+        <div class="hero__caption hero__caption--3">
+          <h1 class="hero__title">Step Aboard</h1>
+          <p class="hero__sub">Interiors by the world's finest ateliers</p>
+        </div>
+        <div class="hero__caption hero__caption--4">
+          <h1 class="hero__title hero__title--sm">Your Journey Begins Here</h1>
+          <p class="hero__sub">A curated fleet, quietly for sale</p>
+          <a class="btn btn--light" href="#fleet">Explore the Fleet</a>
+        </div>
+      </div>
+
+      <div class="hero__scrollcue" aria-hidden="true">
+        <span>Scroll</span>
+        <span class="hero__scrollcue-dot">↓</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ===================== MANIFESTO + STATS ===================== -->
+    <section class="section section--ink manifesto" id="about">
+      <div class="container">
+        <div class="manifesto__grid">
+          <div class="reveal">
+            <p class="eyebrow eyebrow--gold">The House</p>
+            <h2 class="h2 h2--light">A brokerage built for the<br />world's most exceptional yachts.</h2>
+          </div>
+          <div class="manifesto__body reveal">
+            <p class="lede">For three decades AS Yachts has represented owners, buyers and charter guests across every ocean — pairing the discretion of a private office with the reach of a global marketing machine.</p>
+            <p>We sell fewer yachts, and we sell them better. Every listing is photographed, filmed and represented as a singular object of design. Every enquiry is met by a broker, never a queue.</p>
+          </div>
+        </div>
+
+        <div class="stats reveal">
+          <div class="stat">
+            <span class="stat__num" data-count="4.2" data-decimals="1">0</span><span class="stat__suffix">B+</span>
+            <p class="stat__label">In yachts sold &amp; chartered</p>
+          </div>
+          <div class="stat">
+            <span class="stat__num" data-count="320">0</span><span class="stat__suffix">+</span>
+            <p class="stat__label">Yachts represented</p>
+          </div>
+          <div class="stat">
+            <span class="stat__num" data-count="45">0</span>
+            <p class="stat__label">Specialist brokers worldwide</p>
+          </div>
+          <div class="stat">
+            <span class="stat__num" data-count="18">0</span>
+            <p class="stat__label">Offices &amp; berths globally</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FEATURED YACHTS ===================== -->
+    <section class="section section--night fleet" id="fleet">
+      <div class="container">
+        <div class="section__head reveal">
+          <div>
+            <p class="eyebrow eyebrow--gold">For Sale</p>
+            <h2 class="h2 h2--light">Featured Yachts</h2>
+          </div>
+          <p class="section__note">A selection from our central-agency listings. Full particulars and private viewings on request.</p>
+        </div>
+
+        <div class="fleet__grid">
+          <!-- Card 1 -->
+          <article class="yacht reveal">
+            <a class="yacht__media" href="yacht.html" style="background-image: linear-gradient(180deg, rgba(4,8,16,.05), rgba(4,8,16,.72)), radial-gradient(120% 90% at 50% 12%, #16344f, #060b16 72%), url('assets/stills/still-hull.jpg');" aria-label="View Aurelia">
+              <span class="yacht__flag">Central Agency</span>
+              <span class="yacht__price">€ 74,500,000</span>
+            </a>
+            <div class="yacht__body">
+              <div class="yacht__title">
+                <h3>Aurelia</h3>
+                <span class="yacht__loa">62.5m</span>
+              </div>
+              <ul class="yacht__specs">
+                <li><span>Builder</span><strong>Benetti</strong></li>
+                <li><span>Year</span><strong>2021</strong></li>
+                <li><span>Cabins</span><strong>6</strong></li>
+                <li><span>Guests</span><strong>12</strong></li>
+                <li><span>Cruising</span><strong>15 kn</strong></li>
+                <li><span>Location</span><strong>Monaco</strong></li>
+              </ul>
+              <a class="btn btn--gold btn--full" href="yacht.html">View Yacht</a>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="yacht reveal">
+            <a class="yacht__media" href="yacht.html" style="background-image: linear-gradient(180deg, rgba(4,8,16,.05), rgba(4,8,16,.72)), radial-gradient(120% 90% at 50% 12%, #123a44, #060b16 72%), url('assets/stills/still-aft.jpg');" aria-label="View Meridian Star">
+              <span class="yacht__flag">New Listing</span>
+              <span class="yacht__price">$ 118,000,000</span>
+            </a>
+            <div class="yacht__body">
+              <div class="yacht__title">
+                <h3>Meridian Star</h3>
+                <span class="yacht__loa">78.0m</span>
+              </div>
+              <ul class="yacht__specs">
+                <li><span>Builder</span><strong>Lürssen</strong></li>
+                <li><span>Year</span><strong>2019</strong></li>
+                <li><span>Cabins</span><strong>8</strong></li>
+                <li><span>Guests</span><strong>16</strong></li>
+                <li><span>Cruising</span><strong>16 kn</strong></li>
+                <li><span>Location</span><strong>Palma</strong></li>
+              </ul>
+              <a class="btn btn--gold btn--full" href="yacht.html">View Yacht</a>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="yacht reveal">
+            <a class="yacht__media" href="yacht.html" style="background-image: linear-gradient(180deg, rgba(4,8,16,.05), rgba(4,8,16,.72)), radial-gradient(120% 90% at 50% 12%, #1b2f4d, #060b16 72%), url('assets/stills/still-deck.jpg');" aria-label="View Serene Blue">
+              <span class="yacht__flag">Central Agency</span>
+              <span class="yacht__price">€ 39,900,000</span>
+            </a>
+            <div class="yacht__body">
+              <div class="yacht__title">
+                <h3>Serene Blue</h3>
+                <span class="yacht__loa">51.0m</span>
+              </div>
+              <ul class="yacht__specs">
+                <li><span>Builder</span><strong>Feadship</strong></li>
+                <li><span>Year</span><strong>2017</strong></li>
+                <li><span>Cabins</span><strong>5</strong></li>
+                <li><span>Guests</span><strong>10</strong></li>
+                <li><span>Cruising</span><strong>14 kn</strong></li>
+                <li><span>Location</span><strong>Antibes</strong></li>
+              </ul>
+              <a class="btn btn--gold btn--full" href="yacht.html">View Yacht</a>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="yacht reveal">
+            <a class="yacht__media" href="yacht.html" style="background-image: linear-gradient(180deg, rgba(4,8,16,.05), rgba(4,8,16,.72)), radial-gradient(120% 90% at 50% 12%, #14263f, #060b16 72%), url('assets/stills/still-salon.jpg');" aria-label="View La Reina">
+              <span class="yacht__flag">Price on Application</span>
+              <span class="yacht__price">POA</span>
+            </a>
+            <div class="yacht__body">
+              <div class="yacht__title">
+                <h3>La Reina</h3>
+                <span class="yacht__loa">85.4m</span>
+              </div>
+              <ul class="yacht__specs">
+                <li><span>Builder</span><strong>Oceanco</strong></li>
+                <li><span>Year</span><strong>2022</strong></li>
+                <li><span>Cabins</span><strong>9</strong></li>
+                <li><span>Guests</span><strong>18</strong></li>
+                <li><span>Cruising</span><strong>17 kn</strong></li>
+                <li><span>Location</span><strong>Fort Lauderdale</strong></li>
+              </ul>
+              <a class="btn btn--gold btn--full" href="yacht.html">View Yacht</a>
+            </div>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="yacht reveal">
+            <a class="yacht__media" href="yacht.html" style="background-image: linear-gradient(180deg, rgba(4,8,16,.05), rgba(4,8,16,.72)), radial-gradient(120% 90% at 50% 12%, #10303a, #060b16 72%), url('assets/stills/still-foredeck.jpg');" aria-label="View Odyssey">
+              <span class="yacht__flag">Central Agency</span>
+              <span class="yacht__price">€ 28,750,000</span>
+            </a>
+            <div class="yacht__body">
+              <div class="yacht__title">
+                <h3>Odyssey</h3>
+                <span class="yacht__loa">44.2m</span>
+              </div>
+              <ul class="yacht__specs">
+                <li><span>Builder</span><strong>Sanlorenzo</strong></li>
+                <li><span>Year</span><strong>2020</strong></li>
+                <li><span>Cabins</span><strong>5</strong></li>
+                <li><span>Guests</span><strong>10</strong></li>
+                <li><span>Cruising</span><strong>15 kn</strong></li>
+                <li><span>Location</span><strong>Athens</strong></li>
+              </ul>
+              <a class="btn btn--gold btn--full" href="yacht.html">View Yacht</a>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="yacht reveal">
+            <a class="yacht__media" href="yacht.html" style="background-image: linear-gradient(180deg, rgba(4,8,16,.05), rgba(4,8,16,.72)), radial-gradient(120% 90% at 50% 12%, #1a2c48, #060b16 72%), url('assets/stills/still-approach.jpg');" aria-label="View Celestia">
+              <span class="yacht__flag">New Construction</span>
+              <span class="yacht__price">$ 96,500,000</span>
+            </a>
+            <div class="yacht__body">
+              <div class="yacht__title">
+                <h3>Celestia</h3>
+                <span class="yacht__loa">71.0m</span>
+              </div>
+              <ul class="yacht__specs">
+                <li><span>Builder</span><strong>Amels</strong></li>
+                <li><span>Year</span><strong>2024</strong></li>
+                <li><span>Cabins</span><strong>7</strong></li>
+                <li><span>Guests</span><strong>14</strong></li>
+                <li><span>Cruising</span><strong>16 kn</strong></li>
+                <li><span>Location</span><strong>Vlissingen</strong></li>
+              </ul>
+              <a class="btn btn--gold btn--full" href="yacht.html">View Yacht</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="fleet__more reveal">
+          <a class="btn btn--light" href="#contact">Request the Full Portfolio</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== BUY A YACHT ===================== -->
+    <section class="section section--ink buy" id="buy">
+      <div class="container">
+        <div class="section__head reveal">
+          <div>
+            <p class="eyebrow eyebrow--gold">Buying with AS Yachts</p>
+            <h2 class="h2 h2--light">A considered path to ownership.</h2>
+          </div>
+          <p class="section__note">From the first brief to the moment the flag is raised, one broker guides you through every stage.</p>
+        </div>
+
+        <ol class="process reveal">
+          <li class="process__step">
+            <span class="process__no">01</span>
+            <h3>The Search</h3>
+            <p>We translate your brief — size, style, cruising grounds — into a shortlist that includes off-market yachts unavailable elsewhere.</p>
+          </li>
+          <li class="process__step">
+            <span class="process__no">02</span>
+            <h3>Private Viewings</h3>
+            <p>Discreet inspections arranged worldwide, on your schedule, with full technical briefings from our in-house surveyors.</p>
+          </li>
+          <li class="process__step">
+            <span class="process__no">03</span>
+            <h3>Negotiation</h3>
+            <p>We structure and lead the offer, protecting your position and your privacy from letter of intent to signed MOA.</p>
+          </li>
+          <li class="process__step">
+            <span class="process__no">04</span>
+            <h3>Survey &amp; Sea Trial</h3>
+            <p>Independent condition and sea trials coordinated with class societies to confirm every system before you commit.</p>
+          </li>
+          <li class="process__step">
+            <span class="process__no">05</span>
+            <h3>Legal &amp; Flag</h3>
+            <p>Escrow, registration, VAT and flag advisory handled with maritime counsel — nothing left to chance.</p>
+          </li>
+          <li class="process__step">
+            <span class="process__no">06</span>
+            <h3>Closing &amp; Handover</h3>
+            <p>Funds released, title transferred, and a seamless handover to your captain, crew and management team.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== SELL YOUR YACHT ===================== -->
+    <section class="section section--night sell" id="sell">
+      <div class="container sell__grid">
+        <div class="sell__pitch reveal">
+          <p class="eyebrow eyebrow--gold">Sell Your Yacht</p>
+          <h2 class="h2 h2--light">Marketed as a masterpiece.<br />Sold with discretion.</h2>
+          <p class="lede">Your yacht deserves more than a listing. It deserves a campaign — cinematic film, editorial photography and placement in front of a private network of qualified buyers.</p>
+          <ul class="sell__points">
+            <li>Global marketing across every major channel &amp; boat show</li>
+            <li>Cinematic hero video &amp; architectural photography</li>
+            <li>Direct outreach to our vetted buyer network</li>
+            <li>Accurate, defensible valuation from live market data</li>
+            <li>Weekly reporting and a single point of contact</li>
+          </ul>
+        </div>
+
+        <form class="valuation reveal" id="valuationForm" novalidate>
+          <h3 class="valuation__title">Request a Valuation</h3>
+          <div class="field">
+            <label for="v-name">Full name</label>
+            <input id="v-name" name="name" type="text" required autocomplete="name" />
+            <span class="field__error" hidden>Please enter your name.</span>
+          </div>
+          <div class="field">
+            <label for="v-email">Email</label>
+            <input id="v-email" name="email" type="email" required autocomplete="email" />
+            <span class="field__error" hidden>Please enter a valid email.</span>
+          </div>
+          <div class="field field--split">
+            <div>
+              <label for="v-yacht">Yacht name</label>
+              <input id="v-yacht" name="yacht" type="text" />
+            </div>
+            <div>
+              <label for="v-loa">Length (m)</label>
+              <input id="v-loa" name="loa" type="text" inputmode="decimal" />
+            </div>
+          </div>
+          <div class="field field--split">
+            <div>
+              <label for="v-builder">Builder</label>
+              <input id="v-builder" name="builder" type="text" />
+            </div>
+            <div>
+              <label for="v-year">Year</label>
+              <input id="v-year" name="year" type="text" inputmode="numeric" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="v-notes">Anything we should know</label>
+            <textarea id="v-notes" name="notes" rows="3"></textarea>
+          </div>
+          <button class="btn btn--gold btn--full" type="submit">Request Valuation</button>
+          <p class="form__status" id="valuationStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== CHARTER ===================== -->
+    <section class="section section--ink charter" id="charter">
+      <div class="container">
+        <div class="section__head reveal">
+          <div>
+            <p class="eyebrow eyebrow--gold">Charter</p>
+            <h2 class="h2 h2--light">A week aboard, anywhere.</h2>
+          </div>
+          <p class="section__note">Fully crewed luxury charters in the world's most coveted cruising grounds. Rates shown per week, plus expenses.</p>
+        </div>
+
+        <div class="charter__filters reveal" id="charterFilters" role="tablist" aria-label="Charter destinations">
+          <button class="chip is-active" data-region="all" role="tab" aria-selected="true">All</button>
+          <button class="chip" data-region="med" role="tab" aria-selected="false">Mediterranean</button>
+          <button class="chip" data-region="carib" role="tab" aria-selected="false">Caribbean &amp; Bahamas</button>
+          <button class="chip" data-region="usa" role="tab" aria-selected="false">Miami &amp; Florida</button>
+        </div>
+
+        <div class="charter__grid" id="charterGrid">
+          <article class="ccard reveal" data-region="med">
+            <div class="ccard__media" style="background-image: linear-gradient(180deg, rgba(4,8,16,.1), rgba(4,8,16,.78)), linear-gradient(135deg, #0e3b5c, #0a1830);">
+              <span class="ccard__region">Monaco · French Riviera</span>
+            </div>
+            <div class="ccard__body">
+              <h3>Aurelia · 62.5m</h3>
+              <p class="ccard__meta">12 guests · 6 cabins · Benetti</p>
+              <div class="ccard__foot">
+                <span class="ccard__rate">from €560,000<small>/wk</small></span>
+                <a class="ccard__link" href="#contact">Enquire</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ccard reveal" data-region="med">
+            <div class="ccard__media" style="background-image: linear-gradient(180deg, rgba(4,8,16,.1), rgba(4,8,16,.78)), linear-gradient(135deg, #10505a, #0a1830);">
+              <span class="ccard__region">Amalfi Coast · Italy</span>
+            </div>
+            <div class="ccard__body">
+              <h3>Serene Blue · 51.0m</h3>
+              <p class="ccard__meta">10 guests · 5 cabins · Feadship</p>
+              <div class="ccard__foot">
+                <span class="ccard__rate">from €410,000<small>/wk</small></span>
+                <a class="ccard__link" href="#contact">Enquire</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ccard reveal" data-region="med">
+            <div class="ccard__media" style="background-image: linear-gradient(180deg, rgba(4,8,16,.1), rgba(4,8,16,.78)), linear-gradient(135deg, #123a63, #0a1830);">
+              <span class="ccard__region">Greece · Croatia</span>
+            </div>
+            <div class="ccard__body">
+              <h3>Odyssey · 44.2m</h3>
+              <p class="ccard__meta">10 guests · 5 cabins · Sanlorenzo</p>
+              <div class="ccard__foot">
+                <span class="ccard__rate">from €245,000<small>/wk</small></span>
+                <a class="ccard__link" href="#contact">Enquire</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ccard reveal" data-region="carib">
+            <div class="ccard__media" style="background-image: linear-gradient(180deg, rgba(4,8,16,.1), rgba(4,8,16,.78)), linear-gradient(135deg, #0d6b74, #0a1830);">
+              <span class="ccard__region">The Bahamas</span>
+            </div>
+            <div class="ccard__body">
+              <h3>La Reina · 85.4m</h3>
+              <p class="ccard__meta">18 guests · 9 cabins · Oceanco</p>
+              <div class="ccard__foot">
+                <span class="ccard__rate">from $1,250,000<small>/wk</small></span>
+                <a class="ccard__link" href="#contact">Enquire</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ccard reveal" data-region="carib">
+            <div class="ccard__media" style="background-image: linear-gradient(180deg, rgba(4,8,16,.1), rgba(4,8,16,.78)), linear-gradient(135deg, #0a7d84, #0a1830);">
+              <span class="ccard__region">The Caribbean</span>
+            </div>
+            <div class="ccard__body">
+              <h3>Celestia · 71.0m</h3>
+              <p class="ccard__meta">14 guests · 7 cabins · Amels</p>
+              <div class="ccard__foot">
+                <span class="ccard__rate">from $890,000<small>/wk</small></span>
+                <a class="ccard__link" href="#contact">Enquire</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ccard reveal" data-region="usa">
+            <div class="ccard__media" style="background-image: linear-gradient(180deg, rgba(4,8,16,.1), rgba(4,8,16,.78)), linear-gradient(135deg, #155a8a, #0a1830);">
+              <span class="ccard__region">Miami · Florida Keys</span>
+            </div>
+            <div class="ccard__body">
+              <h3>Meridian Star · 78.0m</h3>
+              <p class="ccard__meta">16 guests · 8 cabins · Lürssen</p>
+              <div class="ccard__foot">
+                <span class="ccard__rate">from $1,050,000<small>/wk</small></span>
+                <a class="ccard__link" href="#contact">Enquire</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== DESTINATIONS ===================== -->
+    <section class="section section--night destinations" id="destinations">
+      <div class="container">
+        <div class="section__head reveal">
+          <div>
+            <p class="eyebrow eyebrow--gold">Where We Cruise</p>
+            <h2 class="h2 h2--light">Destinations</h2>
+          </div>
+          <p class="section__note">Eight coastlines our captains know by heart — each an itinerary waiting to be written.</p>
+        </div>
+      </div>
+
+      <div class="dest__rail">
+        <a class="dest" href="#charter" style="--g1:#0d6b74; --g2:#062028;">
+          <span class="dest__name">The Bahamas</span><span class="dest__cta">Charter itineraries →</span>
+        </a>
+        <a class="dest" href="#charter" style="--g1:#155a8a; --g2:#061422;">
+          <span class="dest__name">Miami</span><span class="dest__cta">Charter itineraries →</span>
+        </a>
+        <a class="dest" href="#charter" style="--g1:#0a7d84; --g2:#04191d;">
+          <span class="dest__name">The Caribbean</span><span class="dest__cta">Charter itineraries →</span>
+        </a>
+        <a class="dest" href="#charter" style="--g1:#20456f; --g2:#060e1c;">
+          <span class="dest__name">Monaco</span><span class="dest__cta">Charter itineraries →</span>
+        </a>
+        <a class="dest" href="#charter" style="--g1:#1c5a86; --g2:#06141f;">
+          <span class="dest__name">The French Riviera</span><span class="dest__cta">Charter itineraries →</span>
+        </a>
+        <a class="dest" href="#charter" style="--g1:#12667a; --g2:#041a20;">
+          <span class="dest__name">Greece</span><span class="dest__cta">Charter itineraries →</span>
+        </a>
+        <a class="dest" href="#charter" style="--g1:#155f6b; --g2:#05181d;">
+          <span class="dest__name">Croatia</span><span class="dest__cta">Charter itineraries →</span>
+        </a>
+        <a class="dest" href="#charter" style="--g1:#14507a; --g2:#05121d;">
+          <span class="dest__name">The Amalfi Coast</span><span class="dest__cta">Charter itineraries →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===================== EXPERTISE ===================== -->
+    <section class="section section--ink expertise" id="expertise">
+      <div class="container">
+        <div class="section__head reveal">
+          <div>
+            <p class="eyebrow eyebrow--gold">Brokerage Expertise</p>
+            <h2 class="h2 h2--light">What sets the house apart.</h2>
+          </div>
+          <p class="section__note">A full-service private office — every discipline of yachting under one roof.</p>
+        </div>
+
+        <div class="expertise__grid">
+          <div class="ecard reveal">
+            <span class="ecard__mark">✦</span>
+            <h3>Global Market Expertise</h3>
+            <p>Live intelligence on values, availability and demand across every builder and cruising ground.</p>
+          </div>
+          <div class="ecard reveal">
+            <span class="ecard__mark">✦</span>
+            <h3>Off-Market Access</h3>
+            <p>Private introductions to yachts never publicly listed — the quiet market only insiders reach.</p>
+          </div>
+          <div class="ecard reveal">
+            <span class="ecard__mark">✦</span>
+            <h3>Discreet Representation</h3>
+            <p>Your identity protected at every stage, with confidentiality written into the mandate.</p>
+          </div>
+          <div class="ecard reveal">
+            <span class="ecard__mark">✦</span>
+            <h3>Contract &amp; Negotiation</h3>
+            <p>Maritime counsel and seasoned negotiators structuring terms firmly in your favour.</p>
+          </div>
+          <div class="ecard reveal">
+            <span class="ecard__mark">✦</span>
+            <h3>Charter Management</h3>
+            <p>Turnkey operation of your yacht as a charter asset — crew, calendar, revenue and reporting.</p>
+          </div>
+          <div class="ecard reveal">
+            <span class="ecard__mark">✦</span>
+            <h3>Yacht Marketing</h3>
+            <p>Cinematic film, editorial photography and placement designed to sell at the right price.</p>
+          </div>
+          <div class="ecard reveal">
+            <span class="ecard__mark">✦</span>
+            <h3>New Construction Advisory</h3>
+            <p>From naval architect to delivery — representing you across a multi-year build programme.</p>
+          </div>
+          <div class="ecard reveal">
+            <span class="ecard__mark">✦</span>
+            <h3>Aftercare &amp; Management</h3>
+            <p>Technical, financial and crew management long after the sale, keeping your yacht immaculate.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== TESTIMONIALS ===================== -->
+    <section class="section section--night testimonials" id="testimonials">
+      <div class="container">
+        <p class="eyebrow eyebrow--gold reveal" style="text-align:center;">In Their Words</p>
+        <div class="carousel" id="carousel">
+          <div class="carousel__track" id="carouselTrack">
+            <blockquote class="quote is-active">
+              <p class="quote__text">“AS Yachts found us a yacht that was never on the market. Six weeks from first call to handover, and not a single detail out of place.”</p>
+              <footer class="quote__by">James &amp; Eleanor — <span>Buyers, 71m</span></footer>
+            </blockquote>
+            <blockquote class="quote">
+              <p class="quote__text">“They sold our previous yacht above asking, in a soft market, because the film they produced made buyers fall in love before they stepped aboard.”</p>
+              <footer class="quote__by">Alexander — <span>Seller, 55m</span></footer>
+            </blockquote>
+            <blockquote class="quote">
+              <p class="quote__text">“Two weeks in the Cyclades, flawlessly arranged. The crew, the itinerary, the discretion — everything felt effortless.”</p>
+              <footer class="quote__by">Sofia — <span>Charter guest, Greece</span></footer>
+            </blockquote>
+            <blockquote class="quote">
+              <p class="quote__text">“I have worked with three brokerages. AS Yachts is the only one where a partner still answers the phone at midnight in the Pacific.”</p>
+              <footer class="quote__by">Rashid — <span>Owner, 85m</span></footer>
+            </blockquote>
+            <blockquote class="quote">
+              <p class="quote__text">“The valuation was honest, the marketing was extraordinary, and the closing was seamless. A genuinely private, professional house.”</p>
+              <footer class="quote__by">Marguerite — <span>Seller, 48m</span></footer>
+            </blockquote>
+          </div>
+          <div class="carousel__controls">
+            <button class="carousel__arrow" id="prevSlide" aria-label="Previous testimonial">←</button>
+            <div class="carousel__dots" id="carouselDots" role="tablist" aria-label="Testimonials"></div>
+            <button class="carousel__arrow" id="nextSlide" aria-label="Next testimonial">→</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CONTACT ===================== -->
+    <section class="section section--ink contact" id="contact">
+      <div class="container contact__grid">
+        <div class="contact__intro reveal">
+          <p class="eyebrow eyebrow--gold">Private Inquiry</p>
+          <h2 class="h2 h2--light">Begin a conversation.</h2>
+          <p class="lede">Tell us what you have in mind — buying, selling or chartering — and a specialist broker will respond personally, in confidence.</p>
+
+          <ul class="contact__details">
+            <li><span>Call</span><a href="tel:+37799001234">+377 99 00 12 34</a></li>
+            <li><span>Email</span><a href="mailto:brokers@asyachts.com">brokers@asyachts.com</a></li>
+            <li><span>Monaco</span>Le Millésime, 12 Quai Antoine 1er, 98000</li>
+            <li><span>Fort Lauderdale</span>2200 Harbour Terrace, Suite 500, FL 33316</li>
+            <li><span>Palma</span>Moll Vell 3, 07012 Palma de Mallorca</li>
+          </ul>
+
+          <div class="contact__social">
+            <a href="#" aria-label="Instagram">Instagram</a>
+            <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            <a href="#" aria-label="YouTube">YouTube</a>
+          </div>
+        </div>
+
+        <form class="contact__form reveal" id="contactForm" novalidate>
+          <div class="field">
+            <label for="c-name">Full name</label>
+            <input id="c-name" name="name" type="text" required autocomplete="name" />
+            <span class="field__error" hidden>Please enter your name.</span>
+          </div>
+          <div class="field field--split">
+            <div>
+              <label for="c-email">Email</label>
+              <input id="c-email" name="email" type="email" required autocomplete="email" />
+              <span class="field__error" hidden>Please enter a valid email.</span>
+            </div>
+            <div>
+              <label for="c-phone">Phone</label>
+              <input id="c-phone" name="phone" type="tel" autocomplete="tel" />
+            </div>
+          </div>
+          <div class="field field--split">
+            <div>
+              <label for="c-interest">I'm interested in</label>
+              <select id="c-interest" name="interest">
+                <option>Buying a yacht</option>
+                <option>Selling a yacht</option>
+                <option>Chartering a yacht</option>
+                <option>New construction</option>
+              </select>
+            </div>
+            <div>
+              <label for="c-yacht">Yacht of interest</label>
+              <input id="c-yacht" name="yacht" type="text" placeholder="e.g. Aurelia" />
+            </div>
+          </div>
+          <div class="field field--split">
+            <div>
+              <label for="c-dest">Preferred destination</label>
+              <select id="c-dest" name="destination">
+                <option>No preference</option>
+                <option>The Bahamas</option>
+                <option>Miami</option>
+                <option>The Caribbean</option>
+                <option>Monaco</option>
+                <option>The French Riviera</option>
+                <option>Greece</option>
+                <option>Croatia</option>
+                <option>The Amalfi Coast</option>
+              </select>
+            </div>
+            <div>
+              <label for="c-budget">Budget</label>
+              <select id="c-budget" name="budget">
+                <option>Under €10M</option>
+                <option>€10M – €30M</option>
+                <option>€30M – €60M</option>
+                <option>€60M – €100M</option>
+                <option>€100M+</option>
+                <option>Charter enquiry</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="c-message">Message</label>
+            <textarea id="c-message" name="message" rows="4" required></textarea>
+            <span class="field__error" hidden>Please add a short message.</span>
+          </div>
+          <button class="btn btn--gold btn--full" type="submit">Request a Private Consultation</button>
+          <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <span class="nav__mark">AS</span>
+        <span class="nav__markSub">Yachts</span>
+        <p class="footer__tag">Private yacht brokerage, charter &amp; new construction. Represented worldwide.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Company</h4>
+        <a href="#about">The House</a>
+        <a href="#expertise">Expertise</a>
+        <a href="#fleet">Featured Yachts</a>
+        <a href="#testimonials">Clients</a>
+      </div>
+      <div class="footer__col">
+        <h4>Services</h4>
+        <a href="#buy">Buy a Yacht</a>
+        <a href="#sell">Sell Your Yacht</a>
+        <a href="#charter">Charter</a>
+        <a href="#destinations">Destinations</a>
+      </div>
+      <div class="footer__col">
+        <h4>Offices</h4>
+        <a href="#contact">Monaco</a>
+        <a href="#contact">Fort Lauderdale</a>
+        <a href="#contact">Palma de Mallorca</a>
+        <a href="mailto:brokers@asyachts.com">brokers@asyachts.com</a>
+      </div>
+    </div>
+    <div class="footer__bar container">
+      <p>© <span id="year">2026</span> AS Yachts. A demonstration site. All yachts, prices and details are illustrative.</p>
+      <div class="footer__social">
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="LinkedIn">LinkedIn</a>
+        <a href="#" aria-label="YouTube">YouTube</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- GSAP + ScrollTrigger (progressive enhancement; site works without) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

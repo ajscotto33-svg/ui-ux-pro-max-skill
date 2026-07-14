@@ -8,6 +8,7 @@ on:
     paths:
       - "projects/andrew-scotto-realty/**"
       - "projects/azure-estates/**"
+      - "projects/as-yachts/**"
       - ".github/workflows/deploy-website.yml"
   workflow_dispatch:
 
@@ -30,14 +31,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Two sites, one Pages deployment:
-      #   /       -> Andrew Scotto | Douglas Elliman (original, unchanged)
-      #   /azure/ -> Azure Estates (neutral branding)
+      # Three sites, one Pages deployment:
+      #   /        -> Andrew Scotto | Douglas Elliman (original, unchanged)
+      #   /azure/  -> Azure Estates (neutral branding)
+      #   /yachts/ -> AS Yachts (luxury yacht brokerage)
       - name: Assemble site bundle
         run: |
-          mkdir -p _site/azure
+          mkdir -p _site/azure _site/yachts
           cp -r projects/andrew-scotto-realty/. _site/
           cp -r projects/azure-estates/. _site/azure/
+          cp -r projects/as-yachts/. _site/yachts/
 
       # For each site: bake in its hero video (all-keyframe mp4 fallback)
       # and extract the JPEG frame sequence that powers the canvas scrub.
@@ -85,7 +88,37 @@ jobs:
           prepare "_site/azure" \
             "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_150621_fe761e14-cf7f-4043-a8fc-e1bc99ba797c.mp4" \
             11 1.15
-          du -sh _site _site/azure || true
+          # AS Yachts: full 14s continuous drone journey (200ft side-angle)
+          prepare "_site/yachts" \
+            "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_191448_f6c93475-3080-411f-915d-bc8467db69ee.mp4"
+          du -sh _site _site/azure _site/yachts || true
+
+      # AS Yachts: pull editorial stills straight from the hero footage.
+      # The journey (approach -> hull -> aft -> deck -> salon -> foredeck)
+      # gives us six first-party photos for the cards, gallery and detail
+      # page. All backgrounds have a CSS gradient fallback, so a missing
+      # still degrades to an intentional gradient rather than a broken image.
+      - name: Prepare AS Yachts stills
+        continue-on-error: true
+        run: |
+          command -v ffmpeg >/dev/null || {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          }
+          STILLS="_site/yachts/assets/stills"
+          mkdir -p "$STILLS"
+          SRC="https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_191448_f6c93475-3080-411f-915d-bc8467db69ee.mp4"
+          if curl -fL --retry 3 --max-time 180 -o /tmp/yhero.mp4 "$SRC"; then
+            grab() { ffmpeg -y -ss "$1" -i /tmp/yhero.mp4 -frames:v 1 -vf "scale=1600:-2" -q:v 3 "$STILLS/$2.jpg" || true; }
+            grab 1.5  still-approach
+            grab 4.0  still-hull
+            grab 6.5  still-aft
+            grab 8.5  still-deck
+            grab 10.5 still-salon
+            grab 13.0 still-foredeck
+            rm -f /tmp/yhero.mp4
+          fi
+          ls -la "$STILLS" || true
 
       # Property, interior, and neighborhood photography for the Azure site.
       # Fetched at deploy time and converted to JPG (CDN links can expire;
