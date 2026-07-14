@@ -1,0 +1,56 @@
+name: Deploy Website to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - claude/higgsfield-seedance-video-23k2du
+    paths:
+      - "projects/andrew-scotto-realty/**"
+      - ".github/workflows/deploy-website.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Bake the hero video into the deployment so the site does not depend
+      # on the (expirable) Higgsfield CDN link. If the link has expired the
+      # deploy still succeeds and the page falls back to its remote source.
+      - name: Fetch hero video
+        continue-on-error: true
+        run: |
+          mkdir -p projects/andrew-scotto-realty/assets
+          curl -fL --retry 3 --max-time 120 \
+            -o projects/andrew-scotto-realty/assets/hero.mp4 \
+            "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_135642_55558543-6c58-47e0-b1d1-e032b1111a69.mp4"
+          ls -la projects/andrew-scotto-realty/assets/ || true
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: projects/andrew-scotto-realty
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
