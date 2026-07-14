@@ -37,9 +37,26 @@ jobs:
         run: |
           mkdir -p projects/andrew-scotto-realty/assets
           curl -fL --retry 3 --max-time 120 \
-            -o projects/andrew-scotto-realty/assets/hero.mp4 \
+            -o projects/andrew-scotto-realty/assets/hero-original.mp4 \
             "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_135642_55558543-6c58-47e0-b1d1-e032b1111a69.mp4"
           ls -la projects/andrew-scotto-realty/assets/ || true
+
+      # Re-encode with every frame as a keyframe so video.currentTime seeks
+      # resolve instantly — this is what makes scroll-scrubbing feel smooth.
+      # Falls back to the original file if ffmpeg fails.
+      - name: Optimize hero video for scroll scrubbing
+        continue-on-error: true
+        run: |
+          cd projects/andrew-scotto-realty/assets
+          if [ -f hero-original.mp4 ]; then
+            ffmpeg -y -i hero-original.mp4 -an \
+              -c:v libx264 -profile:v high -crf 23 \
+              -g 1 -keyint_min 1 -sc_threshold 0 \
+              -pix_fmt yuv420p -movflags +faststart \
+              hero.mp4 || cp hero-original.mp4 hero.mp4
+            rm -f hero-original.mp4
+          fi
+          ls -la .
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

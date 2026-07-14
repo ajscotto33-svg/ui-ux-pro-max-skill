@@ -81,9 +81,13 @@
 
     function tick() {
       var delta = targetTime - currentTime;
-      currentTime += delta * 0.14;
       if (Math.abs(delta) > 0.004) {
-        try { video.currentTime = currentTime; } catch (e) {}
+        // Never issue a new seek while the previous one is still resolving —
+        // stacked seeks are the main source of visible scrub jank.
+        if (!video.seeking) {
+          currentTime += delta * 0.18;
+          try { video.currentTime = currentTime; } catch (e) {}
+        }
         rafId = requestAnimationFrame(tick);
       } else {
         rafId = null;
