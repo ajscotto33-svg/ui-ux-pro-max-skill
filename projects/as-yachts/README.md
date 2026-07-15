@@ -36,7 +36,7 @@ The deploy workflow bakes all of this in. To run the scrub locally, drop the
 source video in and extract frames:
 
 ```bash
-curl -L -o assets/hero-original.mp4 "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_191448_f6c93475-3080-411f-915d-bc8467db69ee.mp4"
+curl -L -o assets/hero-original.mp4 "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260715_171524_b3b646c5-bb25-4e5a-94c0-dbca6152a3bc.mp4"
 ffmpeg -i assets/hero-original.mp4 -g 1 -keyint_min 1 -sc_threshold 0 -c:v libx264 -crf 23 -pix_fmt yuv420p -an -movflags +faststart assets/hero.mp4
 mkdir -p assets/frames
 ffmpeg -i assets/hero-original.mp4 -vf "fps=15,scale=1600:-2" -q:v 3 assets/frames/frame_%04d.jpg

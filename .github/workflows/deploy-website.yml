@@ -90,7 +90,7 @@ jobs:
             11 1.15
           # AS Yachts: full 14s continuous drone journey (200ft side-angle)
           prepare "_site/yachts" \
-            "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_191448_f6c93475-3080-411f-915d-bc8467db69ee.mp4"
+            "https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260715_171524_b3b646c5-bb25-4e5a-94c0-dbca6152a3bc.mp4"
           du -sh _site _site/azure _site/yachts || true
 
       # AS Yachts: pull editorial stills straight from the hero footage.
@@ -107,7 +107,7 @@ jobs:
           }
           STILLS="_site/yachts/assets/stills"
           mkdir -p "$STILLS"
-          SRC="https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260714_191448_f6c93475-3080-411f-915d-bc8467db69ee.mp4"
+          SRC="https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260715_171524_b3b646c5-bb25-4e5a-94c0-dbca6152a3bc.mp4"
           if curl -fL --retry 3 --max-time 180 -o /tmp/yhero.mp4 "$SRC"; then
             grab() { ffmpeg -y -ss "$1" -i /tmp/yhero.mp4 -frames:v 1 -vf "scale=1600:-2" -q:v 3 "$STILLS/$2.jpg" || true; }
             grab 1.5  still-approach
