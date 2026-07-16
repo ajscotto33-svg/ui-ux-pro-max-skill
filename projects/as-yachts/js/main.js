@@ -93,6 +93,16 @@
       c.style.opacity = i === 3 ? "1" : "0";
       c.style.transform = "none";
     });
+    // Sustainability: pause the looping fallback video when it scrolls
+    // out of view, resume when it returns (never runs the canvas modes).
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { var q = video.play(); if (q && q.catch) q.catch(function () {}); }
+          else video.pause();
+        });
+      }, { threshold: 0.05 }).observe(hero);
+    }
     if (hasGSAP) ScrollTrigger.refresh();
   }
 
@@ -288,6 +298,24 @@
   } else {
     document.querySelectorAll(".reveal").forEach(function (el) {
       el.style.opacity = "1"; el.style.transform = "none";
+    });
+  }
+
+  /* ------------------------------------------------------
+     SUBTLE PARALLAX — decorative card imagery only.
+     Drifts the background-position of the photo (never text)
+     within its frame as the card passes through the viewport.
+     ------------------------------------------------------ */
+  if (hasGSAP && !prefersReducedMotion) {
+    gsap.utils.toArray(".yacht__media, .ccard__media").forEach(function (el) {
+      gsap.fromTo(el,
+        { backgroundPositionY: "42%" },
+        {
+          backgroundPositionY: "58%",
+          ease: "none",
+          scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.5 }
+        }
+      );
     });
   }
 

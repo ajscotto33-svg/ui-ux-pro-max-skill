@@ -51,6 +51,24 @@
     });
   }
 
+  /* subtle parallax on decorative imagery (never text) */
+  if (hasGSAP && !prefersReducedMotion) {
+    gsap.utils.toArray(".gallery__item, .split__media").forEach(function (el) {
+      gsap.fromTo(el,
+        { backgroundPositionY: "42%" },
+        { backgroundPositionY: "58%", ease: "none",
+          scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.5 } });
+    });
+    // detail hero: gentle drift while the banner is in view
+    var dhero = document.querySelector(".dhero");
+    if (dhero) {
+      gsap.fromTo(dhero,
+        { backgroundPositionY: "46%" },
+        { backgroundPositionY: "62%", ease: "none",
+          scrollTrigger: { trigger: dhero, start: "top top", end: "bottom top", scrub: 0.5 } });
+    }
+  }
+
   /* scroll beam */
   (function () {
     var beam = document.getElementById("scrollbeam");

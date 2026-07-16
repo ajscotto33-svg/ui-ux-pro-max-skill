@@ -14,8 +14,8 @@
 
   --gold: #c8a24a;
   --gold-soft: #e6cf9c;
-  --silver: #c7d0dd;       /* brushed silver text */
-  --silver-dim: #8b96a8;
+  --silver: #cbd4e0;       /* brushed silver text */
+  --silver-dim: #9aa6b8;   /* lifted for AA on dark */
   --cream: #f3efe6;        /* warm white */
   --white: #ffffff;
 
@@ -23,8 +23,8 @@
   --line-soft: rgba(199, 208, 221, 0.08);
   --gold-line: rgba(200, 162, 74, 0.35);
 
-  --txt: rgba(233, 238, 245, 0.78);
-  --txt-dim: rgba(233, 238, 245, 0.55);
+  --txt: rgba(233, 238, 245, 0.82);
+  --txt-dim: rgba(233, 238, 245, 0.66);
 
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-body: "Jost", "Helvetica Neue", Arial, sans-serif;
@@ -99,9 +99,9 @@ input, textarea { cursor: text; }
 .h2 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.4rem, 5vw, 4.1rem);
-  line-height: 1.06;
-  letter-spacing: -0.01em;
+  font-size: clamp(2.6rem, 5.6vw, 4.8rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
   color: var(--cream);
   margin-bottom: var(--space-3);
 }
@@ -343,13 +343,13 @@ input, textarea { cursor: text; }
 .hero__title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.9rem, 8vw, 6.8rem);
-  line-height: 1.0;
-  letter-spacing: 0.005em;
+  font-size: clamp(3.2rem, 9.5vw, 8.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
   color: var(--white);
   text-shadow: 0 4px 40px rgba(4, 7, 14, 0.5);
 }
-.hero__title--sm { font-size: clamp(2.4rem, 6vw, 5rem); }
+.hero__title--sm { font-size: clamp(2.6rem, 7vw, 6rem); }
 .hero__sub {
   margin-top: 1rem;
   font-size: 0.82rem;
