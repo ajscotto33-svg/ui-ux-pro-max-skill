@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azure Estates — South Florida Luxury Waterfront Real Estate</title>
+  <meta name="description" content="Azure Estates — luxury waterfront homes and condominiums across Miami and South Florida.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-family='Georgia'>Æ</text></svg>">
+</head>
+<body>
+
+  <!-- ======================= FUTURISTIC UI LAYERS ======================= -->
+  <div class="scrollbeam" id="scrollbeam" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <span class="cursor__dot"></span>
+    <span class="cursor__ring"></span>
+  </div>
+
+  <!-- ======================= NAVIGATION ======================= -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#top" class="nav__brand">
+        <span class="nav__brand-name">Azure&nbsp;Estates</span>
+        <span class="nav__brand-sub">South Florida Luxury Real Estate</span>
+      </a>
+      <nav class="nav__links" id="navLinks" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#properties">Properties</a>
+        <a href="#communities">Communities</a>
+        <a href="#service-area">Service Area</a>
+        <a href="#why">Expertise</a>
+        <a href="#contact" class="nav__cta">Contact</a>
+      </nav>
+      <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ======================= HERO (scroll-scrubbed video) ======================= -->
+    <section class="hero" id="hero" aria-label="Cinematic tour of a Miami bayfront estate">
+      <div class="hero__sticky">
+        <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+        <video class="hero__video" id="heroVideo" muted playsinline preload="auto"
+               poster=""
+               aria-hidden="true">
+          <source src="assets/hero.mp4" type="video/mp4" id="heroSourceLocal">
+        </video>
+        <div class="hero__shade"></div>
+
+        <div class="hero__caption hero__caption--1">
+          <p class="eyebrow">Miami &middot; South Florida</p>
+          <h1 class="hero__title">Live Where the<br>Water Begins</h1>
+        </div>
+        <div class="hero__caption hero__caption--2">
+          <h2 class="hero__title hero__title--sm">Seamless Indoor&ndash;Outdoor Living</h2>
+          <p class="hero__sub">Infinity edges. Private docks. Endless water.</p>
+        </div>
+        <div class="hero__caption hero__caption--3">
+          <h2 class="hero__title hero__title--sm">Azure Estates</h2>
+          <p class="hero__sub">Luxury Waterfront Real Estate</p>
+          <a class="btn btn--light" href="#properties">Explore Properties</a>
+        </div>
+
+        <div class="hero__scrollcue" aria-hidden="true">
+          <span>Scroll</span>
+          <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="1" y="1" width="14" height="22" rx="7"></rect>
+            <line class="hero__scrollcue-dot" x1="8" y1="6" x2="8" y2="10"></line>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= MARQUEE TICKER ======================= -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span class="marquee__item">Miami Beach</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Brickell</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Coral Gables</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Key Biscayne</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Sunny Isles</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Bal Harbour</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Coconut Grove</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Fort Lauderdale</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Miami Beach</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Brickell</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Coral Gables</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Key Biscayne</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Sunny Isles</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Bal Harbour</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Coconut Grove</span><span class="marquee__star">&#10022;</span>
+        <span class="marquee__item">Fort Lauderdale</span><span class="marquee__star">&#10022;</span>
+      </div>
+    </div>
+
+    <!-- ======================= ABOUT / BRAND ======================= -->
+    <section class="about section" id="about">
+      <div class="container about__grid">
+        <div class="about__media reveal">
+          <div class="about__portrait">
+            <span class="about__monogram" aria-hidden="true">&AElig;</span>
+            <img class="about__photo" src="assets/img/about-interior.jpg"
+                 alt="Double-height living room of a Miami bayfront estate"
+                 loading="lazy" onerror="this.remove()">
+          </div>
+          <div class="about__badge">
+            <span class="about__badge-line"></span>
+            <span>Luxury Waterfront<br>Specialists</span>
+          </div>
+        </div>
+        <div class="about__copy">
+          <p class="eyebrow reveal">About</p>
+          <h2 class="h2 reveal">Azure Estates</h2>
+          <p class="lede reveal">A boutique luxury real estate practice devoted to the waterfront homes and skyline residences that define South Florida living.</p>
+          <p class="reveal">From bayfront estates with private docks to penthouses above Biscayne Bay, we pair deep local market knowledge with a discreet, white-glove approach. Every engagement is handled with precision, patience, and an obsessive attention to the details that move markets.</p>
+          <div class="about__stats reveal">
+            <div class="stat">
+              <span class="stat__num" data-count="20">0</span><span class="stat__plus">+</span>
+              <span class="stat__label">Years of Experience</span>
+            </div>
+            <div class="stat">
+              <span class="stat__prefix">$</span><span class="stat__num" data-count="500">0</span><span class="stat__plus">M+</span>
+              <span class="stat__label">In Collective Sales</span>
+            </div>
+            <div class="stat">
+              <span class="stat__num" data-count="15">0</span><span class="stat__plus">+</span>
+              <span class="stat__label">Neighborhoods Covered</span>
+            </div>
+          </div>
+          <a href="#contact" class="btn btn--dark reveal">Start a Conversation</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= FEATURED PROPERTIES ======================= -->
+    <section class="properties section section--dark" id="properties">
+      <div class="container">
+        <p class="eyebrow eyebrow--gold reveal">Portfolio</p>
+        <div class="section__head reveal">
+          <h2 class="h2 h2--light">Featured Properties</h2>
+          <p class="section__note">A curated selection of current and recent representations.</p>
+        </div>
+        <div class="properties__grid">
+
+          <article class="card reveal">
+            <a class="card__link" href="#contact" aria-label="Inquire about Bayfront Modern Estate, Miami Beach">
+              <div class="card__media card__media--1">
+                <span class="card__tag">New Listing</span>
+                <svg class="card__art" viewBox="0 0 400 260" preserveAspectRatio="none" aria-hidden="true">
+                  <polyline points="0,190 120,190 120,110 300,110 300,190 400,190" />
+                  <polyline points="150,110 150,70 270,70 270,110" />
+                  <line x1="0" y1="220" x2="400" y2="220" />
+                </svg>
+                <img class="card__img" src="assets/img/prop-bayfront.jpg"
+                     alt="Modern glass bayfront estate at dusk with infinity pool"
+                     loading="lazy" onerror="this.remove()">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Bayfront Modern Estate</h3>
+                <p class="card__loc">Miami Beach &middot; Waterfront</p>
+                <p class="card__price">$12,500,000</p>
+                <ul class="card__specs">
+                  <li>6 Bed</li><li>7.5 Bath</li><li>8,400 SF</li><li>100&prime; Dock</li>
+                </ul>
+                <p class="card__desc">Glass-wrapped modern masterpiece with 100 feet of protected bay frontage, infinity-edge pool, and a private dock minutes from open water.</p>
+              </div>
+            </a>
+          </article>
+
+          <article class="card reveal">
+            <a class="card__link" href="#contact" aria-label="Inquire about Brickell Sky Penthouse">
+              <div class="card__media card__media--2">
+                <span class="card__tag">Penthouse</span>
+                <svg class="card__art" viewBox="0 0 400 260" preserveAspectRatio="none" aria-hidden="true">
+                  <line x1="80" y1="220" x2="80" y2="40" /><line x1="140" y1="220" x2="140" y2="80" />
+                  <line x1="200" y1="220" x2="200" y2="20" /><line x1="260" y1="220" x2="260" y2="70" />
+                  <line x1="320" y1="220" x2="320" y2="50" />
+                  <line x1="0" y1="220" x2="400" y2="220" />
+                </svg>
+                <img class="card__img" src="assets/img/prop-penthouse.jpg"
+                     alt="Penthouse terrace overlooking Biscayne Bay at golden hour"
+                     loading="lazy" onerror="this.remove()">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Brickell Sky Penthouse</h3>
+                <p class="card__loc">Brickell &middot; Biscayne Bay Views</p>
+                <p class="card__price">$7,900,000</p>
+                <ul class="card__specs">
+                  <li>4 Bed</li><li>5 Bath</li><li>5,200 SF</li><li>Full Floor</li>
+                </ul>
+                <p class="card__desc">Full-floor penthouse with 360&deg; bay and skyline views, private elevator landing, and a wraparound terrace with plunge pool.</p>
+              </div>
+            </a>
+          </article>
+
+          <article class="card reveal">
+            <a class="card__link" href="#contact" aria-label="Inquire about Coral Gables Villa">
+              <div class="card__media card__media--3">
+                <span class="card__tag">Coming Soon</span>
+                <svg class="card__art" viewBox="0 0 400 260" preserveAspectRatio="none" aria-hidden="true">
+                  <polyline points="60,200 60,120 200,50 340,120 340,200" />
+                  <polyline points="160,200 160,150 240,150 240,200" />
+                  <line x1="0" y1="200" x2="400" y2="200" />
+                </svg>
+                <img class="card__img" src="assets/img/prop-villa.jpg"
+                     alt="Mediterranean-modern villa with palm-lined driveway in Coral Gables"
+                     loading="lazy" onerror="this.remove()">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">Coral Gables Villa</h3>
+                <p class="card__loc">Coral Gables &middot; Gated Canal Front</p>
+                <p class="card__price">Price Upon Request</p>
+                <ul class="card__specs">
+                  <li>5 Bed</li><li>6 Bath</li><li>6,100 SF</li><li>Pool + Dock</li>
+                </ul>
+                <p class="card__desc">Gated Mediterranean-modern estate on a deep-water canal in Gables Estates &mdash; direct bay access with no fixed bridges.</p>
+              </div>
+            </a>
+          </article>
+
+        </div>
+        <p class="properties__cta reveal">
+          <a href="#contact" class="btn btn--gold">Request the Full Portfolio</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ======================= MARKET INSIGHTS ======================= -->
+    <section class="insights section" id="insights" aria-label="Market insights">
+      <div class="container">
+        <p class="eyebrow reveal">Market Insights</p>
+        <div class="insights__head reveal">
+          <h2 class="h2">The Waterfront Market,<br>By the Numbers</h2>
+          <p class="insights__note">Trailing twelve months across our core Miami-Dade coverage. Ask us for the full quarterly report.</p>
+        </div>
+        <div class="insights__grid">
+          <div class="insight reveal">
+            <span class="insight__num"><span class="stat__prefix">$</span><span class="stat__num" data-count="2.4" data-decimals="1">0</span>M</span>
+            <span class="insight__label">Median Waterfront Sale</span>
+          </div>
+          <div class="insight reveal">
+            <span class="insight__num"><span class="stat__num" data-count="42">0</span></span>
+            <span class="insight__label">Average Days on Market</span>
+          </div>
+          <div class="insight reveal">
+            <span class="insight__num"><span class="stat__num" data-count="97">0</span>%</span>
+            <span class="insight__label">List-to-Close Ratio</span>
+          </div>
+          <div class="insight reveal">
+            <span class="insight__num"><span class="stat__prefix">$</span><span class="stat__num" data-count="180">0</span>M+</span>
+            <span class="insight__label">Closed, Trailing 12 Months</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= SERVICE AREA / MAP ======================= -->
+    <section class="area section" id="service-area">
+      <div class="container area__grid">
+        <div class="area__copy">
+          <p class="eyebrow reveal">Service Area</p>
+          <h2 class="h2 reveal">We Service<br>South Florida</h2>
+          <p class="lede reveal">From the barrier islands to the Gables, we cover the neighborhoods that define waterfront living in Greater Miami.</p>
+          <ul class="area__chips reveal" id="areaChips">
+            <li data-lat="25.7907" data-lng="-80.1300">Miami Beach</li>
+            <li data-lat="25.7617" data-lng="-80.1918">Brickell</li>
+            <li data-lat="25.7259" data-lng="-80.2377">Coconut Grove</li>
+            <li data-lat="25.7215" data-lng="-80.2684">Coral Gables</li>
+            <li data-lat="25.6907" data-lng="-80.1620">Key Biscayne</li>
+            <li data-lat="25.9429" data-lng="-80.1226">Sunny Isles Beach</li>
+            <li data-lat="25.8600" data-lng="-80.1200">Bal Harbour</li>
+            <li data-lat="25.8195" data-lng="-80.1420">North Bay Village</li>
+            <li data-lat="26.1224" data-lng="-80.1373">Fort Lauderdale</li>
+            <li data-lat="25.9812" data-lng="-80.1484">Aventura</li>
+          </ul>
+        </div>
+        <div class="area__mapwrap reveal">
+          <div id="map" class="area__map" role="region" aria-label="Map of South Florida service areas"></div>
+          <div class="area__map-fallback" id="mapFallback" hidden>
+            <p>Serving Miami-Dade &amp; Broward &mdash; Miami Beach, Brickell, Coconut Grove, Coral Gables, Key Biscayne, Sunny Isles, Bal Harbour, Fort Lauderdale &amp; beyond.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= FEATURED COMMUNITIES ======================= -->
+    <section class="hoods section section--dark" id="communities">
+      <div class="container">
+        <p class="eyebrow eyebrow--gold reveal">Featured Communities</p>
+        <div class="section__head reveal">
+          <h2 class="h2 h2--light">Neighborhoods We Know<br>House by House</h2>
+          <p class="section__note">Four of the enclaves where we work most &mdash; each with its own rhythm, architecture, and waterfront.</p>
+        </div>
+        <div class="hoods__grid">
+          <a class="hood reveal" href="#contact" aria-label="Explore Miami Beach with Azure Estates">
+            <div class="hood__media">
+              <img class="hood__img" src="assets/img/hood-miami-beach.jpg"
+                   alt="Aerial view of Miami Beach shoreline and art deco district"
+                   loading="lazy" onerror="this.remove()">
+            </div>
+            <div class="hood__body">
+              <h3 class="hood__name">Miami Beach</h3>
+              <p class="hood__blurb">Oceanfront icons, guard-gated island enclaves, and the deepest luxury inventory in South Florida.</p>
+              <span class="hood__price">From $2.4M</span>
+            </div>
+          </a>
+          <a class="hood reveal" href="#contact" aria-label="Explore Brickell with Azure Estates">
+            <div class="hood__media">
+              <img class="hood__img" src="assets/img/hood-brickell.jpg"
+                   alt="Brickell skyline glowing at blue hour across Biscayne Bay"
+                   loading="lazy" onerror="this.remove()">
+            </div>
+            <div class="hood__body">
+              <h3 class="hood__name">Brickell</h3>
+              <p class="hood__blurb">Sky-high residences and full-service towers at the center of Miami&rsquo;s financial district.</p>
+              <span class="hood__price">From $850K</span>
+            </div>
+          </a>
+          <a class="hood reveal" href="#contact" aria-label="Explore Coral Gables with Azure Estates">
+            <div class="hood__media">
+              <img class="hood__img" src="assets/img/hood-coral-gables.jpg"
+                   alt="Banyan-canopied street lined with Mediterranean estates in Coral Gables"
+                   loading="lazy" onerror="this.remove()">
+            </div>
+            <div class="hood__body">
+              <h3 class="hood__name">Coral Gables</h3>
+              <p class="hood__blurb">Old-world elegance under the banyans &mdash; canal-front estates with direct bay access.</p>
+              <span class="hood__price">From $1.6M</span>
+            </div>
+          </a>
+          <a class="hood reveal" href="#contact" aria-label="Explore Key Biscayne with Azure Estates">
+            <div class="hood__media">
+              <img class="hood__img" src="assets/img/hood-key-biscayne.jpg"
+                   alt="Palm-lined beach with turquoise water on Key Biscayne"
+                   loading="lazy" onerror="this.remove()">
+            </div>
+            <div class="hood__body">
+              <h3 class="hood__name">Key Biscayne</h3>
+              <p class="hood__blurb">Barrier-island serenity ten minutes from Downtown &mdash; beaches, parks, and a village pace.</p>
+              <span class="hood__price">From $1.9M</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= MARKET EXPERTISE ======================= -->
+    <section class="why section section--cream" id="why">
+      <div class="container">
+        <p class="eyebrow reveal">The Difference</p>
+        <h2 class="h2 reveal">Why Work With Us</h2>
+        <div class="why__grid">
+          <div class="pillar reveal">
+            <div class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>
+            </div>
+            <h3 class="pillar__title">Waterfront Expertise</h3>
+            <p>Dockage, seawalls, flood zones, insurance — the variables that make or break a waterfront deal, handled before they become surprises.</p>
+          </div>
+          <div class="pillar reveal">
+            <div class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18M3.6 9h16.8M3.6 15h16.8"/></svg>
+            </div>
+            <h3 class="pillar__title">Local Knowledge, Global Reach</h3>
+            <p>Street-level insight into Miami&rsquo;s micro-markets, amplified by an international network of qualified buyers and partners.</p>
+          </div>
+          <div class="pillar reveal">
+            <div class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h3 class="pillar__title">Personalized Service</h3>
+            <p>One dedicated point of contact from first showing to closing table. Direct access, honest counsel, and availability that matches the pace of this market.</p>
+          </div>
+          <div class="pillar reveal">
+            <div class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+            </div>
+            <h3 class="pillar__title">Data-Driven Strategy</h3>
+            <p>Pricing, positioning, and negotiation grounded in real comparables and absorption data — not guesswork.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= TESTIMONIALS ======================= -->
+    <section class="testimonials section section--dark" id="testimonials">
+      <div class="container">
+        <p class="eyebrow eyebrow--gold reveal">Testimonials</p>
+        <h2 class="h2 h2--light reveal">In Their Words</h2>
+        <div class="carousel reveal" id="carousel" aria-roledescription="carousel" aria-label="Client testimonials">
+          <div class="carousel__track" id="carouselTrack">
+            <blockquote class="carousel__slide" aria-hidden="false">
+              <p class="carousel__quote">&ldquo;They guided us through a waterfront purchase with a level of calm and command we hadn&rsquo;t experienced anywhere else. Every detail — dock permits, insurance, inspections — was handled before we even asked.&rdquo;</p>
+              <footer class="carousel__by">Michael &amp; Sarah &middot; Buyers, Miami Beach</footer>
+            </blockquote>
+            <blockquote class="carousel__slide" aria-hidden="true">
+              <p class="carousel__quote">&ldquo;Our home was priced with real data, marketed beautifully, and closed above ask in three weeks. Professional from the first call to the closing table.&rdquo;</p>
+              <footer class="carousel__by">Daniela &middot; Seller, Coral Gables</footer>
+            </blockquote>
+            <blockquote class="carousel__slide" aria-hidden="true">
+              <p class="carousel__quote">&ldquo;As out-of-state buyers we needed a team we could trust completely. They were our eyes and ears in Miami — video tours, honest opinions, and zero pressure.&rdquo;</p>
+              <footer class="carousel__by">James &amp; Priya &middot; Relocation Clients, Brickell</footer>
+            </blockquote>
+            <blockquote class="carousel__slide" aria-hidden="true">
+              <p class="carousel__quote">&ldquo;Two failed contracts with another brokerage, then one call here. They repositioned the listing, brought a qualified buyer in nine days, and closed at full ask.&rdquo;</p>
+              <footer class="carousel__by">Robert &middot; Seller, Key Biscayne</footer>
+            </blockquote>
+            <blockquote class="carousel__slide" aria-hidden="true">
+              <p class="carousel__quote">&ldquo;Discreet, patient, and brutally honest about value &mdash; exactly what you want when you&rsquo;re placing eight figures into a home. We&rsquo;ve since sent them our closest friends.&rdquo;</p>
+              <footer class="carousel__by">Alessandra &amp; Marco &middot; Buyers, Sunny Isles</footer>
+            </blockquote>
+          </div>
+          <div class="carousel__controls">
+            <button class="carousel__btn" id="prevSlide" aria-label="Previous testimonial">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <div class="carousel__dots" id="carouselDots" role="tablist" aria-label="Choose testimonial"></div>
+            <button class="carousel__btn" id="nextSlide" aria-label="Next testimonial">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= CTA BAND ======================= -->
+    <section class="ctaband" aria-label="Schedule a consultation">
+      <div class="ctaband__aurora" aria-hidden="true"></div>
+      <div class="container ctaband__inner">
+        <div class="reveal">
+          <p class="eyebrow eyebrow--gold">Ready When You Are</p>
+          <h2 class="h2 h2--light ctaband__title">Your Waterfront Chapter<br>Starts Here</h2>
+        </div>
+        <div class="ctaband__actions reveal">
+          <a href="#contact" class="btn btn--gold">Schedule a Private Consultation</a>
+          <a href="tel:+13055550100" class="ctaband__phone">or call (305) 555-0100</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= CONTACT ======================= -->
+    <section class="contact section" id="contact">
+      <div class="container contact__grid">
+        <div class="contact__info">
+          <p class="eyebrow reveal">Contact</p>
+          <h2 class="h2 reveal">Let&rsquo;s Talk<br>Real Estate</h2>
+          <p class="lede reveal">Whether you&rsquo;re buying, selling, or simply curious about the market — reach out anytime.</p>
+
+          <div class="contact__card reveal">
+            <p class="contact__name">Azure Estates</p>
+            <p class="contact__firm">Luxury Waterfront Real Estate</p>
+            <ul class="contact__lines">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2Z"/></svg>
+                <a href="tel:+13055550100">(305) 555-0100</a>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6L22 7"/></svg>
+                <a href="mailto:hello@azureestates.com">hello@azureestates.com</a>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>2200 Bayshore Terrace, Suite 500<br>Miami, FL 33137</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                <span>Mon&ndash;Sat, 9am&ndash;7pm &middot; By appointment Sun</span>
+              </li>
+            </ul>
+            <div class="contact__social">
+              <a href="#" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+              </a>
+              <a href="#" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 10v7M7 7v.1M12 17v-4a2.5 2.5 0 0 1 5 0v4M12 10v1.5"/></svg>
+              </a>
+              <a href="#" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <form class="contact__form reveal" id="contactForm" novalidate>
+          <div class="field">
+            <label for="fName">Full Name <span aria-hidden="true">*</span></label>
+            <input type="text" id="fName" name="name" autocomplete="name" required>
+            <p class="field__error" hidden>Please enter your name.</p>
+          </div>
+          <div class="field field--half">
+            <label for="fEmail">Email <span aria-hidden="true">*</span></label>
+            <input type="email" id="fEmail" name="email" autocomplete="email" required>
+            <p class="field__error" hidden>Please enter a valid email address.</p>
+          </div>
+          <div class="field field--half">
+            <label for="fPhone">Phone</label>
+            <input type="tel" id="fPhone" name="phone" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="fInterest">I&rsquo;m interested in</label>
+            <select id="fInterest" name="interest">
+              <option>Buying</option>
+              <option>Selling</option>
+              <option>Both / Not sure yet</option>
+              <option>A specific property</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fMsg">Message <span aria-hidden="true">*</span></label>
+            <textarea id="fMsg" name="message" rows="4" required></textarea>
+            <p class="field__error" hidden>Please include a short message.</p>
+          </div>
+          <button type="submit" class="btn btn--dark btn--full" id="formSubmit">Send Message</button>
+          <p class="contact__form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================= FOOTER ======================= -->
+  <footer class="footer">
+    <div class="container footer__top">
+      <div class="footer__col footer__col--brand">
+        <p class="footer__name">Azure Estates</p>
+        <p class="footer__firm">South Florida Luxury Real Estate</p>
+        <p class="footer__tagline">A boutique waterfront practice representing buyers and sellers across Miami-Dade and Broward.</p>
+        <div class="footer__social" aria-label="Social media">
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 10v7M7 7v.1M12 17v-4a2.5 2.5 0 0 1 5 0v4M12 10v1.5"/></svg>
+          </a>
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__head">Explore</h4>
+        <nav class="footer__nav" aria-label="Footer explore">
+          <a href="#about">About</a>
+          <a href="#properties">Featured Properties</a>
+          <a href="#communities">Communities</a>
+          <a href="#service-area">Service Area</a>
+          <a href="#why">Why Work With Us</a>
+        </nav>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__head">Communities</h4>
+        <nav class="footer__nav" aria-label="Footer communities">
+          <a href="#communities">Miami Beach</a>
+          <a href="#communities">Brickell</a>
+          <a href="#communities">Coral Gables</a>
+          <a href="#communities">Key Biscayne</a>
+          <a href="#communities">Sunny Isles Beach</a>
+        </nav>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__head">Contact</h4>
+        <address class="footer__contact">
+          <a href="tel:+13055550100">(305) 555-0100</a>
+          <a href="mailto:hello@azureestates.com">hello@azureestates.com</a>
+          <span>2200 Bayshore Terrace, Suite 500<br>Miami, FL 33137</span>
+        </address>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <div class="footer__marks" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" width="24" height="24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M9 14h6M9 17h6"/></svg>
+      </div>
+      <p class="footer__legal-text">Equal Housing Opportunity. All listing information deemed reliable but not guaranteed. Prices and availability subject to change.</p>
+      <p class="footer__copy">&copy; <span id="year"></span> Azure Estates. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
