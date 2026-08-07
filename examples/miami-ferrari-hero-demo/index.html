@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Bayfront Eight &mdash; Scroll-Controlled Hero</title>
+<style>
+  :root{
+    --ink:#f5f0e8;
+    --muted:rgba(245,240,232,.62);
+    --gold:#e9c27e;
+    --bg:#0a0a0c;
+    --maxw:1180px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --font:"Helvetica Neue",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    --serif:"Times New Roman",Georgia,"Playfair Display",serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+
+  /* ---------- Scroll-scrub stage ---------- */
+  /* .scrollTrack is tall and supplies the scroll distance mapped to the
+     video timeline. .stage is sticky, pinning the video while the page
+     scrolls through the track. */
+  .scrollTrack{position:relative;height:600vh}
+  .stage{position:sticky;top:0;height:100vh;height:100svh;width:100%;overflow:hidden;background:#000}
+  .stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02);will-change:transform}
+  .stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 50% 42%,transparent 55%,rgba(0,0,0,.45) 100%),
+      linear-gradient(to bottom,rgba(0,0,0,.55) 0%,transparent 22%,transparent 60%,rgba(0,0,0,.8) 100%);}
+
+  /* ---------- Loading ---------- */
+  .loader{position:absolute;inset:0;z-index:5;display:grid;place-items:center;background:var(--bg);transition:opacity .8s var(--ease)}
+  .loader.hidden{opacity:0;pointer-events:none}
+  .loader .ring{width:34px;height:34px;border-radius:50%;border:2px solid rgba(233,194,126,.25);border-top-color:var(--gold);animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- Fixed brand + progress ---------- */
+  .brandbar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:22px clamp(18px,4vw,48px);mix-blend-mode:difference}
+  .brandbar .mark{font-family:var(--serif);letter-spacing:.14em;font-size:15px;text-transform:uppercase;color:#fff}
+  .brandbar .meta{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#fff;opacity:.8}
+  .progress{position:fixed;left:0;top:0;height:2px;width:100%;z-index:21;background:linear-gradient(90deg,var(--gold),#fff);transform-origin:0 50%;transform:scaleX(0)}
+
+  /* ---------- Beat captions ---------- */
+  .beats{position:absolute;inset:0;z-index:8;pointer-events:none}
+  .beat{position:absolute;left:0;right:0;bottom:clamp(64px,11vh,120px);display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px;opacity:0;transform:translateY(14px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .beat.active{opacity:1;transform:translateY(0)}
+  .beat .idx{font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .beat h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,6vw,68px);line-height:1.02;letter-spacing:-.01em;text-shadow:0 2px 40px rgba(0,0,0,.5)}
+  .beat p{margin-top:14px;max-width:34ch;font-size:clamp(13px,1.6vw,16px);color:var(--muted)}
+
+  .hero-intro{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px;pointer-events:none}
+  .hero-intro .eyebrow{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+  .hero-intro h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,10vw,132px);line-height:.94;letter-spacing:-.02em;text-shadow:0 4px 60px rgba(0,0,0,.55)}
+  .hero-intro .sub{margin-top:20px;font-size:clamp(13px,1.7vw,17px);letter-spacing:.04em;color:var(--muted)}
+  .scrollcue{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:9px;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+  .scrollcue .line{width:1px;height:40px;background:linear-gradient(var(--gold),transparent);animation:drop 1.8s var(--ease) infinite}
+  @keyframes drop{0%{transform:scaleY(.2);transform-origin:top;opacity:0}40%{opacity:1}100%{transform:scaleY(1);transform-origin:top;opacity:0}}
+
+  /* ---------- Content below ---------- */
+  .content{position:relative;z-index:2;background:linear-gradient(var(--bg),#101014)}
+  .section{max-width:var(--maxw);margin:0 auto;padding:clamp(70px,12vh,150px) clamp(20px,5vw,40px)}
+  .kicker{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+  .lede{font-family:var(--serif);font-weight:400;font-size:clamp(26px,4.4vw,50px);line-height:1.12;letter-spacing:-.01em;max-width:20ch}
+  .lede em{color:var(--gold);font-style:italic}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;margin-top:64px;background:rgba(245,240,232,.08);border:1px solid rgba(245,240,232,.08)}
+  .cell{background:var(--bg);padding:34px 28px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between}
+  .cell .n{font-family:var(--serif);font-size:34px;color:var(--gold)}
+  .cell h3{font-size:15px;letter-spacing:.02em;margin:18px 0 8px;font-weight:600}
+  .cell p{font-size:13.5px;line-height:1.6;color:var(--muted)}
+  .stats{display:flex;flex-wrap:wrap;gap:clamp(30px,6vw,80px);margin-top:56px;border-top:1px solid rgba(245,240,232,.1);padding-top:44px}
+  .stat .big{font-family:var(--serif);font-size:clamp(38px,6vw,66px);line-height:1;color:var(--ink)}
+  .stat .lbl{margin-top:10px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+  footer{border-top:1px solid rgba(245,240,232,.1);padding:40px clamp(20px,5vw,40px);text-align:center;color:var(--muted);font-size:12px;letter-spacing:.05em}
+  footer .mark{font-family:var(--serif);letter-spacing:.16em;text-transform:uppercase;color:var(--ink);font-size:14px;margin-bottom:10px;display:block}
+
+  @media (prefers-reduced-motion:reduce){.scrollcue .line{animation:none}}
+</style>
+</head>
+<body>
+
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="brandbar">
+    <span class="mark">Bayfront Eight</span>
+    <span class="meta">Private Waterfront Enclave &middot; Biscayne Bay</span>
+  </header>
+
+  <!-- SCROLL-SCRUB STAGE ------------------------------------------------ -->
+  <section class="scrollTrack" id="track" aria-label="Cinematic arrival fly-through">
+    <div class="stage">
+      <video id="hero"
+             playsinline muted preload="auto" crossorigin="anonymous"
+             poster="https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260807_023141_b0d6266c-aa98-4f2e-a13c-1b4f0759d807.png">
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_3GIGRwFkw7yyzrAmJxMkkQFlLZP/hf_20260807_025247_91c31e18-7114-4af5-a97a-75bc1ad53950.mp4" type="video/mp4" />
+      </video>
+
+      <div class="hero-intro" id="intro">
+        <span class="eyebrow">Eight Residences &middot; On the Bay</span>
+        <h1>Arrive<br>on the Water.</h1>
+        <p class="sub">Scroll to drive in</p>
+      </div>
+
+      <div class="beats" id="beats">
+        <div class="beat" data-in=".14" data-out=".34">
+          <span class="idx">01 &middot; The Arrival</span>
+          <h2>Through the Gates</h2>
+          <p>A private drive opens to eight bayfront estates.</p>
+        </div>
+        <div class="beat" data-in=".34" data-out=".58">
+          <span class="idx">02 &middot; The Enclave</span>
+          <h2>Eight on Biscayne Bay</h2>
+          <p>Individually commissioned waterfront residences.</p>
+        </div>
+        <div class="beat" data-in=".58" data-out=".80">
+          <span class="idx">03 &middot; The Residence</span>
+          <h2>Step Inside</h2>
+          <p>Through the glass into double-height living.</p>
+        </div>
+        <div class="beat" data-in=".84" data-out="1.01">
+          <span class="idx">04 &middot; The View</span>
+          <h2>Pool, Bay &amp; Skyline</h2>
+          <p>The infinity edge meets the water and the city beyond.</p>
+        </div>
+      </div>
+
+      <div class="scrollcue" id="cue"><span>Scroll</span><span class="line"></span></div>
+      <div class="loader" id="loader"><div class="ring" role="status" aria-label="Loading"></div></div>
+    </div>
+  </section>
+
+  <!-- CONTENT BELOW ----------------------------------------------------- -->
+  <main class="content">
+    <section class="section">
+      <p class="kicker">The Collection</p>
+      <p class="lede">Eight private estates directly on Biscayne Bay &mdash; <em>with the Miami skyline across the water.</em></p>
+
+      <div class="grid">
+        <div class="cell"><span class="n">01</span><div><h3>Direct Bay Frontage</h3><p>Private docks and infinity pools that meet the water.</p></div></div>
+        <div class="cell"><span class="n">02</span><div><h3>Floor-to-Ceiling Glass</h3><p>Seamless indoor-outdoor living framed on the bay.</p></div></div>
+        <div class="cell"><span class="n">03</span><div><h3>Individually Designed</h3><p>Eight distinct architectural visions, one enclave.</p></div></div>
+        <div class="cell"><span class="n">04</span><div><h3>Gated &amp; Private</h3><p>A single guarded drive; significant separation between homes.</p></div></div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="big">8</div><div class="lbl">Bayfront Estates</div></div>
+        <div class="stat"><div class="big">1</div><div class="lbl">Gated Drive</div></div>
+        <div class="stat"><div class="big">360&deg;</div><div class="lbl">Water &amp; Skyline Views</div></div>
+        <div class="stat"><div class="big">&infin;</div><div class="lbl">Edge Pools</div></div>
+      </div>
+    </section>
+
+    <footer>
+      <span class="mark">Bayfront Eight</span>
+      Scroll-controlled hero demo &middot; video scrubs to scroll position, forward &amp; back.<br>
+      Fictional development for demonstration purposes.
+    </footer>
+  </main>
+
+<script>
+(function(){
+  var video   = document.getElementById('hero');
+  var track   = document.getElementById('track');
+  var loader  = document.getElementById('loader');
+  var progress= document.getElementById('progress');
+  var intro   = document.getElementById('intro');
+  var cue     = document.getElementById('cue');
+  var beats   = Array.prototype.slice.call(document.querySelectorAll('.beat'));
+
+  var duration = 14;            // fallback; replaced once metadata loads
+  var target   = 0, current = 0, ready = false;
+  var reduce   = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+
+  // Map scroll position within the track to 0..1 progress.
+  function scrollProgress(){
+    var rect = track.getBoundingClientRect();
+    var scrollable = track.offsetHeight - window.innerHeight;
+    if(scrollable <= 0) return 0;
+    return clamp(-rect.top / scrollable, 0, 1);
+  }
+
+  function updateOverlays(p){
+    progress.style.transform = 'scaleX(' + p + ')';
+    var fade = clamp(1 - p/0.12, 0, 1);
+    intro.style.opacity = fade;
+    cue.style.opacity   = fade;
+    for(var i=0;i<beats.length;i++){
+      var b = beats[i];
+      var inP  = parseFloat(b.getAttribute('data-in'));
+      var outP = parseFloat(b.getAttribute('data-out'));
+      b.classList.toggle('active', p>=inP && p<outP);
+    }
+  }
+
+  // Seeking is expensive: lerp toward the target for fluid scrubbing and
+  // skip redundant seeks so the seek queue never backs up.
+  function frame(){
+    var p = scrollProgress();
+    updateOverlays(p);
+    target = p * duration;
+    var ease = reduce ? 1 : 0.16;
+    current += (target - current) * ease;
+    if(Math.abs(target - current) < 0.003) current = target;
+    if(ready && video.readyState >= 2){
+      if(Math.abs(video.currentTime - current) > 0.015){
+        try{ video.currentTime = current; }catch(e){}
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function start(){
+    if(ready) return;
+    ready = true;
+    if(!isNaN(video.duration) && video.duration > 0) duration = video.duration;
+    video.pause();                // we drive the playhead manually
+    loader.classList.add('hidden');
+    requestAnimationFrame(frame);
+  }
+
+  video.addEventListener('loadedmetadata', function(){ if(!isNaN(video.duration) && video.duration>0) duration = video.duration; });
+  video.addEventListener('canplay', start);
+  video.addEventListener('loadeddata', function(){ if(video.readyState>=2) start(); });
+
+  // iOS sometimes needs a nudge to buffer a muted inline video.
+  var kick = function(){ video.play().then(function(){video.pause();}).catch(function(){}); window.removeEventListener('touchstart',kick); window.removeEventListener('click',kick); };
+  window.addEventListener('touchstart', kick, {passive:true});
+  window.addEventListener('click', kick);
+
+  setTimeout(function(){ if(!ready && video.readyState>=1) start(); }, 2500);
+  video.load();
+})();
+</script>
+</body>
+</html>
