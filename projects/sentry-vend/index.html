@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- ============================================================
+     SENTRY VEND — age-verified smart vending machines
+     Single-file build. Rename the brand by replacing "SENTRY VEND"
+     and "SENTRY" throughout (also in <title> and the OG tags).
+     ============================================================ -->
+
+<title>SENTRY VEND — Age-Verified Nicotine Vending for 21+ Venues</title>
+<meta name="description" content="SENTRY VEND places ID-scanning, age-verified vending machines in bars, lounges, smoke shops and hotels. Zero upfront cost, under two hours to install, restocking handled. 21+ venues only.">
+<meta name="robots" content="index, follow, max-image-preview:none, noarchive">
+<meta name="rating" content="adult">
+<meta name="theme-color" content="#0B0B0D">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SENTRY VEND">
+<meta property="og:title" content="SENTRY VEND — Age-Verified Nicotine Vending for 21+ Venues">
+<meta property="og:description" content="ID-scanning vending machines for bars, lounges, smoke shops and hotels. Zero upfront cost. Install in under two hours. Restocking handled.">
+<meta property="og:url" content="https://example.com/">
+<!-- Intended image: 1200x630 render of the machine cabinet on a dark floor, no people. -->
+<meta property="og:image" content="https://example.com/og-machine.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Fonts: geometric grotesque for headings, mono for specs and numbers -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  /* Guarded so a blocked or offline CDN cannot throw before the page scripts run. */
+  if (window.tailwind) tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#0B0B0D',
+          panel:  '#111114',
+          panel2: '#16161A',
+          bone:   '#F2F2EF',
+          muted:  '#9A9A93',
+          amber:  '#FF9E1B'
+        },
+        fontFamily: {
+          sans: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+          mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  };
+</script>
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root{
+  --bg:#0B0B0D;
+  --panel:#111114;
+  --panel-2:#16161A;
+  --text:#F2F2EF;
+  --muted:#9A9A93;
+  --line:rgba(242,242,239,.13);
+  --line-strong:rgba(242,242,239,.28);
+  --accent:#FF9E1B;          /* industrial amber — CTAs and active states only */
+  --accent-ink:#0B0B0D;
+  --warn-h:76px;             /* height reserved for the fixed nicotine warning */
+  --ease:cubic-bezier(.16,.84,.44,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none !important}
+html{scroll-behavior:smooth; scroll-padding-top:96px; -webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Space Grotesk",system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:var(--warn-h);      /* keeps the legal banner off the content */
+}
+body.is-locked{overflow:hidden}       /* used by the age gate and mobile menu */
+
+h1,h2,h3,h4{font-weight:600; letter-spacing:-.03em; line-height:1.05; margin:0}
+p{margin:0}
+a{color:inherit; text-decoration:none}
+img{max-width:100%; display:block}
+ul,ol,dl,dd{margin:0; padding:0}
+li{list-style:none}
+button,input,select,textarea{font:inherit; color:inherit}
+
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+.container{max-width:1200px; margin:0 auto; padding:0 24px}
+.section{padding:72px 0}
+@media(min-width:768px){ .section{padding:128px 0} }
+.hairline{height:1px; background:var(--line); border:0; margin:0}
+
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-ligatures:none}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted);
+}
+.accent{color:var(--accent)}
+.lead{color:var(--muted); font-size:17px; line-height:1.65; max-width:62ch}
+@media(min-width:768px){ .lead{font-size:18px} }
+
+.h-display{font-size:clamp(2.6rem,7.2vw,5.25rem); font-weight:600; line-height:1.05; letter-spacing:-.035em}
+.h-section{font-size:clamp(1.9rem,4.2vw,3rem); font-weight:600; line-height:1.08; letter-spacing:-.03em}
+.h-card{font-size:1.15rem; font-weight:600; line-height:1.25; letter-spacing:-.02em}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  padding:15px 26px; border-radius:2px; border:1px solid transparent;
+  font-weight:600; font-size:15px; letter-spacing:.01em; cursor:pointer;
+  transition:background-color .2s var(--ease), color .2s var(--ease),
+             border-color .2s var(--ease), transform .2s var(--ease);
+}
+.btn-primary{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
+.btn-primary:hover{background:#ffb148; border-color:#ffb148}
+.btn-ghost{background:transparent; color:var(--text); border-color:var(--line-strong)}
+.btn-ghost:hover{border-color:var(--text); background:rgba(242,242,239,.05)}
+.btn-sm{padding:11px 18px; font-size:14px}
+.nav-cta{display:none}
+@media(min-width:768px){ .nav-cta{display:inline-flex} }
+.btn:active{transform:translateY(1px)}
+
+/* ============================================================
+   NAV — shrinks and gains backdrop blur on scroll
+   ============================================================ */
+.nav{
+  position:fixed; top:0; left:0; right:0; z-index:60;
+  border-bottom:1px solid transparent;
+  transition:background-color .3s var(--ease), border-color .3s var(--ease),
+             backdrop-filter .3s var(--ease);
+}
+.nav-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  height:84px; transition:height .3s var(--ease);
+}
+.nav.is-scrolled{
+  background:rgba(11,11,13,.82);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  border-bottom-color:var(--line);
+}
+.nav.is-scrolled .nav-inner{height:64px}
+.wordmark{
+  font-weight:700; letter-spacing:-.04em; font-size:20px; display:inline-flex; align-items:center; gap:9px;
+}
+.wordmark-dot{width:9px; height:9px; background:var(--accent); display:inline-block}
+.nav-link{
+  font-size:14px; color:var(--muted); padding:8px 2px; position:relative;
+  transition:color .2s var(--ease);
+}
+.nav-link:hover,.nav-link.is-active{color:var(--text)}
+.nav-link.is-active::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background:var(--accent);
+}
+
+/* Hamburger */
+.burger{display:inline-flex; flex-direction:column; gap:5px; padding:12px; background:none; border:0; cursor:pointer}
+.burger span{width:22px; height:1.5px; background:var(--text); transition:transform .25s var(--ease), opacity .2s}
+.mobile-menu{
+  position:fixed; inset:0; z-index:70; background:var(--bg);
+  display:flex; flex-direction:column; padding:24px;
+  opacity:0; visibility:hidden; transition:opacity .25s var(--ease), visibility .25s;
+}
+.mobile-menu.is-open{opacity:1; visibility:visible}
+.mobile-menu a.m-link{
+  font-size:1.75rem; font-weight:600; letter-spacing:-.03em;
+  padding:18px 0; border-bottom:1px solid var(--line);
+}
+@media(min-width:768px){ .burger{display:none} .mobile-menu{display:none} }
+
+/* ============================================================
+   HERO — animated gradient mesh + technical grid
+   ============================================================ */
+.hero{position:relative; min-height:100svh; display:flex; align-items:center; overflow:hidden}
+.hero-mesh{position:absolute; inset:-20%; z-index:0; filter:blur(12px)}
+.hero-mesh span{position:absolute; border-radius:50%; opacity:.68; will-change:transform}
+.mesh-a{width:52vw; height:52vw; left:-6%; top:2%;  background:radial-gradient(circle at 50% 50%, rgba(255,158,27,.30), transparent 62%); animation:drift-a 26s ease-in-out infinite}
+.mesh-b{width:48vw; height:48vw; right:-4%; top:18%; background:radial-gradient(circle at 50% 50%, rgba(46,107,255,.22), transparent 62%); animation:drift-b 32s ease-in-out infinite}
+.mesh-c{width:44vw; height:44vw; left:28%; bottom:-12%; background:radial-gradient(circle at 50% 50%, rgba(242,242,239,.10), transparent 62%); animation:drift-c 38s ease-in-out infinite}
+@keyframes drift-a{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(6%,7%,0) scale(1.08)}}
+@keyframes drift-b{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-7%,5%,0) scale(1.1)}}
+@keyframes drift-c{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(4%,-6%,0) scale(1.06)}}
+.hero-grid{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background-image:linear-gradient(rgba(242,242,239,.045) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(242,242,239,.045) 1px, transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 40%, #000 35%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 40%, #000 35%, transparent 100%);
+}
+.hero-vignette{position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(11,11,13,.55) 0%, rgba(11,11,13,.2) 45%, var(--bg) 100%)}
+.hero-content{position:relative; z-index:2; width:100%}
+
+/* ============================================================
+   MOTION — IntersectionObserver fade and rise
+   ============================================================ */
+.reveal{opacity:0; transform:translateY(20px); transition:opacity .4s var(--ease), transform .4s var(--ease)}
+.reveal.is-visible{opacity:1; transform:none}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1; transform:none; transition:none}
+  .hero-mesh span{animation:none}
+  *{transition-duration:.01ms !important}
+}
+
+/* ============================================================
+   SHARED SURFACES
+   ============================================================ */
+.card{background:var(--panel); border:1px solid var(--line); border-radius:3px}
+.card-hover{transition:border-color .2s var(--ease), background-color .2s var(--ease)}
+.card-hover:hover{border-color:var(--line-strong); background:var(--panel-2)}
+.stat-strip{display:grid; grid-template-columns:repeat(2,1fr); border-top:1px solid var(--line)}
+@media(min-width:768px){ .stat-strip{grid-template-columns:repeat(4,1fr)} }
+.stat{padding:22px 20px 22px 0; border-bottom:1px solid var(--line)}
+@media(min-width:768px){ .stat{border-bottom:0; border-right:1px solid var(--line); padding:24px 24px 24px 0}
+  .stat:last-child{border-right:0} }
+.stat-num{font-family:"IBM Plex Mono",monospace; font-size:1.6rem; font-weight:500; letter-spacing:-.02em}
+.stat-label{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-top:6px}
+
+/* Image placeholders — swap each for real photography (see comments in markup) */
+.ph{
+  position:relative; border:1px solid var(--line); border-radius:3px; overflow:hidden;
+  background:
+    radial-gradient(120% 80% at 25% 12%, rgba(255,158,27,.12), transparent 55%),
+    linear-gradient(160deg, #191920 0%, #0F0F13 55%, #0B0B0D 100%);
+}
+.ph::after{
+  content:attr(data-label);
+  position:absolute; left:14px; bottom:12px;
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:rgba(242,242,239,.42);
+}
+
+/* ============================================================
+   HOW IT WORKS — 4-step timeline
+   ============================================================ */
+.timeline{display:grid; gap:0; grid-template-columns:1fr}
+@media(min-width:640px){ .timeline{grid-template-columns:repeat(2,1fr)} }
+@media(min-width:1024px){ .timeline{grid-template-columns:repeat(4,1fr)} }
+.step{padding:34px 26px 34px 0; border-top:1px solid var(--line); position:relative}
+@media(min-width:1024px){ .step{padding-right:34px} }
+.step::before{content:""; position:absolute; top:-1px; left:0; width:38px; height:1px; background:var(--accent)}
+.step-num{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--accent); letter-spacing:.2em}
+.step-icon{width:34px; height:34px; stroke:var(--text); stroke-width:1.25; fill:none; margin:22px 0 18px}
+
+/* ============================================================
+   SPEC LIST
+   ============================================================ */
+.spec{display:grid; grid-template-columns:1fr; gap:4px; padding:16px 0; border-bottom:1px solid var(--line)}
+@media(min-width:520px){ .spec{grid-template-columns:158px minmax(0,1fr); gap:20px; align-items:baseline} }
+.spec dt{font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.spec dd{font-family:"IBM Plex Mono",monospace; font-size:13.5px; color:var(--text); min-width:0; overflow-wrap:break-word}
+
+/* Machine render, drawn in CSS (placeholder for a product render) */
+.machine{aspect-ratio:39/72; max-width:420px; width:100%; margin:0 auto; position:relative;
+  background:linear-gradient(150deg,#1C1C22 0%,#131317 48%,#0D0D10 100%);
+  border:1px solid var(--line-strong); border-radius:6px; padding:14px}
+.machine-glass{height:56%; border:1px solid var(--line); border-radius:3px;
+  background:linear-gradient(115deg, rgba(242,242,239,.07) 0%, rgba(242,242,239,.02) 38%, rgba(46,107,255,.05) 100%);
+  display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(4,1fr); gap:6px; padding:10px}
+.machine-slot{border:1px solid var(--line); border-radius:2px; background:rgba(242,242,239,.035)}
+.machine-screen{margin-top:12px; height:20%; border:1px solid var(--line); border-radius:3px;
+  background:radial-gradient(90% 120% at 30% 0%, rgba(255,158,27,.18), transparent 60%), #0A0A0C;
+  display:flex; align-items:center; justify-content:center;
+  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.16em; color:var(--accent)}
+.machine-reader{margin-top:12px; height:9%; border:1px solid var(--line); border-radius:3px; background:#0A0A0C;
+  display:flex; align-items:center; gap:8px; padding:0 12px;
+  font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.14em; color:var(--muted)}
+.machine-led{width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent)}
+.machine-tray{margin-top:12px; height:7%; border:1px solid var(--line); border-radius:3px; background:#08080A}
+
+/* ============================================================
+   INVENTORY
+   ============================================================ */
+.tab{
+  padding:11px 20px; border:1px solid var(--line); background:transparent; color:var(--muted);
+  font-size:13.5px; font-weight:500; cursor:pointer; border-radius:2px;
+  transition:color .2s var(--ease), border-color .2s var(--ease), background-color .2s var(--ease);
+}
+.tab:hover{color:var(--text); border-color:var(--line-strong)}
+.tab[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.prod-ph{height:132px; border-bottom:1px solid var(--line)}
+.chip{
+  display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10.5px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  border:1px solid var(--line); padding:4px 8px; border-radius:2px;
+}
+.stock-dot{width:6px; height:6px; border-radius:50%; background:var(--accent); display:inline-block}
+
+/* ============================================================
+   FORM
+   ============================================================ */
+.field{display:block; margin-bottom:20px}
+.field-label{display:block; font-family:"IBM Plex Mono",monospace; font-size:11.5px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:9px}
+.input{
+  width:100%; background:var(--panel-2); border:1px solid var(--line); border-radius:2px;
+  padding:13px 14px; font-size:15px; transition:border-color .2s var(--ease);
+}
+.input::placeholder{color:#5F5F5A}
+.input:hover{border-color:var(--line-strong)}
+.input:focus{border-color:var(--accent); outline:none; box-shadow:0 0 0 1px var(--accent)}
+select.input{appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 50%, calc(100% - 14px) 50%; background-size:6px 6px, 6px 6px; background-repeat:no-repeat; padding-right:44px}
+textarea.input{min-height:118px; resize:vertical}
+.input[aria-invalid="true"]{border-color:#FF5A47; box-shadow:0 0 0 1px rgba(255,90,71,.5)}
+.error{display:none; color:#FF7C6B; font-size:13px; margin-top:7px}
+.error.is-shown{display:block}
+
+/* ============================================================
+   FAQ ACCORDION
+   ============================================================ */
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-btn{
+  width:100%; display:flex; align-items:flex-start; justify-content:space-between; gap:24px;
+  background:none; border:0; padding:24px 0; text-align:left; cursor:pointer;
+  font-size:1.05rem; font-weight:500; letter-spacing:-.015em;
+  transition:color .2s var(--ease);
+}
+.faq-btn:hover{color:var(--accent)}
+.faq-sign{position:relative; flex:0 0 16px; height:16px; margin-top:5px}
+.faq-sign::before,.faq-sign::after{content:""; position:absolute; background:currentColor; transition:transform .25s var(--ease)}
+.faq-sign::before{left:0; top:7.5px; width:16px; height:1.5px}
+.faq-sign::after{left:7.5px; top:0; width:1.5px; height:16px}
+.faq-btn[aria-expanded="true"] .faq-sign::after{transform:scaleY(0)}
+.faq-panel{overflow:hidden; max-height:0; transition:max-height .3s var(--ease)}
+.faq-panel-inner{padding:0 0 26px; color:var(--muted); max-width:78ch}
+
+/* ============================================================
+   FIXED NICOTINE WARNING — legally required, not dismissible
+   ============================================================ */
+.warning-bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:90;
+  background:#000; color:#FFF; border-top:2px solid #FFF;
+  padding:16px 24px; text-align:center;
+}
+.warning-bar p{
+  font-family:"IBM Plex Mono",monospace; font-weight:600;
+  font-size:12px; line-height:1.45; letter-spacing:.09em; text-transform:uppercase;
+  max-width:1000px; margin:0 auto;
+}
+@media(min-width:768px){ .warning-bar p{font-size:13px; letter-spacing:.11em} }
+
+/* ============================================================
+   AGE GATE
+   ============================================================ */
+.age-gate{
+  position:fixed; inset:0; z-index:200;
+  display:flex; align-items:center; justify-content:center; padding:24px;
+  background:rgba(6,6,8,.86);
+  backdrop-filter:blur(18px) saturate(120%);
+  -webkit-backdrop-filter:blur(18px) saturate(120%);
+}
+.age-gate[hidden]{display:none}
+.age-card{
+  width:100%; max-width:520px; background:var(--panel); border:1px solid var(--line-strong);
+  border-radius:4px; padding:40px 32px; text-align:center;
+}
+@media(min-width:640px){ .age-card{padding:52px 48px} }
+.age-actions{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:32px}
+.skip-link{
+  position:absolute; left:-9999px; top:0; z-index:300;
+  background:var(--accent); color:var(--accent-ink); padding:12px 18px; font-weight:600;
+}
+.skip-link:focus{left:12px; top:12px}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============================================================
+     SECTION: AGE GATE
+     Blocks all content until the visitor confirms 21+. "Yes" is
+     stored in sessionStorage so it does not re-fire on navigation.
+     ESC is deliberately NOT wired to close this dialog — a choice
+     is required. Set EXIT_URL in the script block to redirect
+     "No" to an external neutral page instead of the local exit state.
+     ============================================================ -->
+<div class="age-gate" id="ageGate" role="dialog" aria-modal="true"
+     aria-labelledby="ageGateTitle" aria-describedby="ageGateDesc">
+  <div class="age-card">
+
+    <!-- Default state: the question -->
+    <div id="ageGateAsk">
+      <p class="eyebrow">Sentry Vend &middot; Restricted Access</p>
+      <p id="ageGateTitle" style="font-size:clamp(1.75rem,5vw,2.4rem); font-weight:600; letter-spacing:-.03em; line-height:1.1; margin-top:20px">Are you 21 or older?</p>
+      <p id="ageGateDesc" class="lead" style="margin:18px auto 0; text-align:center">
+        This site covers nicotine vending equipment and is intended for adults of legal
+        purchase age and for licensed venue operators. Entry requires confirmation.
+      </p>
+      <div class="age-actions">
+        <button type="button" class="btn btn-primary" id="ageYes">Yes, I am 21+</button>
+        <button type="button" class="btn btn-ghost" id="ageNo">No</button>
+      </div>
+      <p class="mono" style="font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-top:26px">
+        Warning: This product contains nicotine. Nicotine is an addictive chemical.
+      </p>
+    </div>
+
+    <!-- Neutral exit state, shown after "No" -->
+    <div id="ageGateExit" hidden>
+      <p class="eyebrow">Access Denied</p>
+      <p style="font-size:clamp(1.6rem,4.5vw,2.1rem); font-weight:600; letter-spacing:-.03em; line-height:1.1; margin-top:20px">You must be 21 or older.</p>
+      <p class="lead" style="margin:18px auto 0; text-align:center">
+        This site is closed to visitors under the legal purchase age. Please close this window.
+      </p>
+      <p class="mono" style="font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-top:28px">
+        Sentry Vend places equipment in licensed 21+ venues only.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION: NAV — sticky, shrinks and blurs on scroll
+     ============================================================ -->
+<header class="nav" id="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#top" class="wordmark" aria-label="Sentry Vend, home">
+        <span class="wordmark-dot" aria-hidden="true"></span>SENTRY<span style="color:var(--muted); font-weight:500"> VEND</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
+        <a href="#how" class="nav-link">How It Works</a>
+        <a href="#machine" class="nav-link">The Machine</a>
+        <a href="#inventory" class="nav-link">Inventory</a>
+        <a href="#locations" class="nav-link">Locations</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a href="#host" class="btn btn-primary btn-sm nav-cta">Host a Machine</a>
+        <button type="button" class="burger" id="burger" aria-label="Open menu"
+                aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Full-screen mobile overlay menu (below 768px) -->
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Site menu">
+  <div class="flex items-center justify-between" style="height:84px">
+    <span class="wordmark"><span class="wordmark-dot" aria-hidden="true"></span>SENTRY<span style="color:var(--muted); font-weight:500"> VEND</span></span>
+    <button type="button" class="burger" id="burgerClose" aria-label="Close menu">
+      <span style="transform:rotate(45deg) translate(4px,5px)"></span>
+      <span style="opacity:0"></span>
+      <span style="transform:rotate(-45deg) translate(4px,-5px)"></span>
+    </button>
+  </div>
+  <nav class="mt-6 flex flex-col" aria-label="Mobile">
+    <a href="#how" class="m-link">How It Works</a>
+    <a href="#machine" class="m-link">The Machine</a>
+    <a href="#inventory" class="m-link">Inventory</a>
+    <a href="#host" class="m-link">Host a Machine</a>
+    <a href="#locations" class="m-link">Locations</a>
+    <a href="#faq" class="m-link">FAQ</a>
+  </nav>
+  <div class="mt-auto grid gap-3" style="padding-bottom:calc(var(--warn-h) + 8px)">
+    <a href="#host" class="btn btn-primary">Host a Machine</a>
+    <a href="#locations" class="btn btn-ghost">Find a Machine</a>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- ============================================================
+     SECTION 1: HERO
+     ============================================================ -->
+<section class="hero" id="top">
+  <!-- Animated gradient mesh. Replace with a machine render if preferred. -->
+  <div class="hero-mesh" aria-hidden="true">
+    <span class="mesh-a"></span><span class="mesh-b"></span><span class="mesh-c"></span>
+  </div>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-vignette" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <div class="container" style="padding-top:120px; padding-bottom:56px">
+      <p class="eyebrow reveal">Smart Vending &middot; 21+ Venues Only</p>
+
+      <h1 class="h-display reveal" style="margin-top:22px; max-width:16ch">
+        Age-verified nicotine retail, automated.
+      </h1>
+
+      <p class="lead reveal" style="margin-top:26px">
+        We place ID-scanning vending machines in bars, hookah lounges, smoke shops,
+        hotels, and other 21+ venues. We own the hardware, stock it, and service it.
+        You give up nine square feet and take a cut of every verified sale.
+      </p>
+
+      <div class="flex flex-wrap gap-3 reveal" style="margin-top:38px">
+        <a href="#host" class="btn btn-primary">Host a Machine</a>
+        <a href="#locations" class="btn btn-ghost">Find a Machine</a>
+      </div>
+
+      <div class="stat-strip reveal" style="margin-top:64px">
+        <div class="stat">
+          <div class="stat-num">&lt; 2 hrs</div>
+          <div class="stat-label">Install Time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">$0</div>
+          <div class="stat-label">Upfront Cost</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">~500</div>
+          <div class="stat-label">Unit Capacity</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">ID-Verified Sales</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="hairline">
+
+<!-- ============================================================
+     SECTION 2: HOW IT WORKS — 4-step timeline
+     ============================================================ -->
+<section class="section" id="how" aria-labelledby="howTitle">
+  <div class="container">
+    <div class="reveal" style="max-width:70ch">
+      <p class="eyebrow">How It Works</p>
+      <h2 class="h-section" id="howTitle" style="margin-top:18px">
+        Four steps. No staff involved.
+      </h2>
+      <p class="lead" style="margin-top:20px">
+        Every transaction runs the same sequence. If any step fails, the machine
+        does not dispense and the attempt is written to the audit log.
+      </p>
+    </div>
+
+    <div class="timeline" style="margin-top:56px">
+
+      <!-- Step 1 -->
+      <article class="step reveal">
+        <span class="step-num">01</span>
+        <svg class="step-icon" viewBox="0 0 32 32" role="img" aria-label="Identification card being scanned">
+          <rect x="2.5" y="7" width="27" height="18" rx="2"></rect>
+          <circle cx="10.5" cy="14.5" r="3"></circle>
+          <path d="M5.5 21c1-2.2 3-3.2 5-3.2s4 1 5 3.2"></path>
+          <path d="M19.5 13.5h6M19.5 17.5h6M19.5 21h4"></path>
+        </svg>
+        <h3 class="h-card">Scan The ID</h3>
+        <p class="lead" style="margin-top:10px; font-size:16px">
+          The reader lifts the PDF417 barcode off a driver&rsquo;s license or state ID and reads the date of birth directly.
+        </p>
+      </article>
+
+      <!-- Step 2 -->
+      <article class="step reveal">
+        <span class="step-num">02</span>
+        <svg class="step-icon" viewBox="0 0 32 32" role="img" aria-label="Face being matched against an identity document">
+          <path d="M4 11V6.5A2.5 2.5 0 0 1 6.5 4H11M21 4h4.5A2.5 2.5 0 0 1 28 6.5V11M28 21v4.5a2.5 2.5 0 0 1-2.5 2.5H21M11 28H6.5A2.5 2.5 0 0 1 4 25.5V21"></path>
+          <circle cx="16" cy="14" r="4"></circle>
+          <path d="M9.5 24c1.4-3 3.9-4.5 6.5-4.5s5.1 1.5 6.5 4.5"></path>
+        </svg>
+        <h3 class="h-card">Confirm The Face</h3>
+        <p class="lead" style="margin-top:10px; font-size:16px">
+          Facial age estimation compares the person at the machine to the credential. A mismatch stops the sale.
+        </p>
+      </article>
+
+      <!-- Step 3 -->
+      <article class="step reveal">
+        <span class="step-num">03</span>
+        <svg class="step-icon" viewBox="0 0 32 32" role="img" aria-label="Touchscreen product selection grid">
+          <rect x="3.5" y="4.5" width="25" height="23" rx="2"></rect>
+          <path d="M3.5 11.5h25"></path>
+          <path d="M9 17h5M9 22h5M18 17h5M18 22h5"></path>
+        </svg>
+        <h3 class="h-card">Select The Product</h3>
+        <p class="lead" style="margin-top:10px; font-size:16px">
+          Live inventory on a 15-inch touchscreen. Empty slots are hidden, so nobody pays for a jam.
+        </p>
+      </article>
+
+      <!-- Step 4 -->
+      <article class="step reveal">
+        <span class="step-num">04</span>
+        <svg class="step-icon" viewBox="0 0 32 32" role="img" aria-label="Product dispensing into the collection tray">
+          <path d="M8 4h16v13H8z"></path>
+          <path d="M8 17l-3 6h22l-3-6"></path>
+          <path d="M5 23v4.5h22V23"></path>
+          <path d="M16 8v5M13.5 10.5L16 13l2.5-2.5"></path>
+        </svg>
+        <h3 class="h-card">Dispense And Log</h3>
+        <p class="lead" style="margin-top:10px; font-size:16px">
+          The unit dispenses, writes a verification record against the sale, and updates stock counts in real time.
+        </p>
+      </article>
+
+    </div>
+
+    <p class="mono reveal" style="margin-top:44px; font-size:12.5px; color:var(--muted); letter-spacing:.06em">
+      AVERAGE END-TO-END TRANSACTION TIME: 38 SECONDS.
+    </p>
+  </div>
+</section>
+
+<hr class="hairline">
+
+<!-- ============================================================
+     SECTION 3: THE MACHINE — split layout, render left, specs right
+     ============================================================ -->
+<section class="section" id="machine" aria-labelledby="machineTitle">
+  <div class="container">
+    <div class="grid gap-14 lg:gap-20 lg:grid-cols-2 items-start">
+
+      <!-- Left: machine render.
+           Intended image: three-quarter studio render of the SV-1 cabinet on a
+           dark seamless floor, single key light from upper left, no people,
+           no lifestyle context. Replace .machine markup with an <img>. -->
+      <div class="reveal">
+        <div class="machine" role="img" aria-label="Render of the SV-1 vending cabinet: glass product bay, touchscreen, ID reader, and dispensing tray.">
+          <div class="machine-glass" aria-hidden="true">
+            <span class="machine-slot"></span><span class="machine-slot"></span><span class="machine-slot"></span><span class="machine-slot"></span>
+            <span class="machine-slot"></span><span class="machine-slot"></span><span class="machine-slot"></span><span class="machine-slot"></span>
+            <span class="machine-slot"></span><span class="machine-slot"></span><span class="machine-slot"></span><span class="machine-slot"></span>
+            <span class="machine-slot"></span><span class="machine-slot"></span><span class="machine-slot"></span><span class="machine-slot"></span>
+          </div>
+          <div class="machine-screen" aria-hidden="true">SCAN ID TO BEGIN</div>
+          <div class="machine-reader" aria-hidden="true"><span class="machine-led"></span>PDF417 READER &middot; ACTIVE</div>
+          <div class="machine-tray" aria-hidden="true"></div>
+        </div>
+        <p class="mono" style="text-align:center; margin-top:18px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted)">
+          Model SV-1 &middot; Floor Standing
+        </p>
+      </div>
+
+      <!-- Right: specifications -->
+      <div class="reveal">
+        <p class="eyebrow">The Machine</p>
+        <h2 class="h-section" id="machineTitle" style="margin-top:18px">Built as retail equipment, not a novelty.</h2>
+        <p class="lead" style="margin-top:20px">
+          Steel cabinet, commercial dispensing gear, and a verification stack we can lock out
+          from a laptop. It runs on one standard outlet and reports its own inventory.
+        </p>
+
+        <dl style="margin-top:36px; border-top:1px solid var(--line)">
+          <div class="spec"><dt>Dimensions</dt><dd>72&quot; H &times; 39&quot; W &times; 35&quot; D</dd></div>
+          <div class="spec"><dt>Footprint</dt><dd>9.5 sq ft &middot; 640 lb empty</dd></div>
+          <div class="spec"><dt>Capacity</dt><dd>~500 units across 36 selections</dd></div>
+          <div class="spec"><dt>Power</dt><dd>110V standard outlet &middot; 4.2A draw</dd></div>
+          <div class="spec"><dt>Payment</dt><dd>Tap, chip, mobile wallet &mdash; no cash accepted</dd></div>
+          <div class="spec"><dt>Connectivity</dt><dd>4G LTE &middot; live inventory telemetry</dd></div>
+          <div class="spec"><dt>ID Verification</dt><dd>PDF417 barcode scan + facial age estimation</dd></div>
+          <div class="spec"><dt>Security</dt><dd>Tamper alerts, door sensors, interior camera</dd></div>
+          <div class="spec"><dt>Remote Control</dt><dd>Full lockout, per-slot disable, curfew scheduling</dd></div>
+          <div class="spec"><dt>Reporting</dt><dd>Per-transaction audit log &middot; 24-month retention</dd></div>
+        </dl>
+
+        <div class="flex flex-wrap gap-3" style="margin-top:34px">
+          <a href="#host" class="btn btn-primary">Host a Machine</a>
+          <a href="#locations" class="btn btn-ghost">Find a Machine</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="hairline">
+
+<!-- ============================================================
+     SECTION 4: INVENTORY — machine stock, filterable. Not a store.
+     No prices, no cart, no checkout. Display only.
+     ============================================================ -->
+<section class="section" id="inventory" aria-labelledby="inventoryTitle">
+  <div class="container">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 reveal">
+      <div style="max-width:62ch">
+        <p class="eyebrow">Inventory</p>
+        <h2 class="h-section" id="inventoryTitle" style="margin-top:18px">What the machines carry.</h2>
+        <p class="lead" style="margin-top:20px">
+          Standard planogram across the fleet. Stock is set per venue against state flavor rules
+          and the host&rsquo;s local retail permit. This is machine inventory, not an online store &mdash;
+          nothing on this page can be purchased here.
+        </p>
+      </div>
+
+      <!-- Filter tabs (plain JS, no library) -->
+      <div class="flex gap-2" role="group" aria-label="Filter inventory by category">
+        <button type="button" class="tab" id="tab-all" aria-pressed="true" aria-controls="inventoryGrid" data-filter="all">All</button>
+        <button type="button" class="tab" id="tab-pouches" aria-pressed="false" aria-controls="inventoryGrid" data-filter="pouches">Pouches</button>
+        <button type="button" class="tab" id="tab-vapes" aria-pressed="false" aria-controls="inventoryGrid" data-filter="vapes">Vapes</button>
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 reveal" id="inventoryGrid" style="margin-top:48px" aria-live="polite">
+
+      <!-- Each .ph is a placeholder for a straight-on product shot on matte grey, no props, no hands. -->
+      <article class="card card-hover overflow-hidden" data-category="pouches">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Zyn Cool Mint nicotine pouch tin"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Zyn Cool Mint</h3><span class="chip">3 mg</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Pouches &middot; 15 per tin</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 14 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="pouches">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Zyn Cool Mint nicotine pouch tin, 6 milligram"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Zyn Cool Mint</h3><span class="chip">6 mg</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Pouches &middot; 15 per tin</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 12 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="pouches">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Zyn Citrus nicotine pouch tin"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Zyn Citrus</h3><span class="chip">6 mg</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Pouches &middot; 15 per tin</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 9 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="pouches">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Zyn Espressino nicotine pouch tin"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Zyn Espressino</h3><span class="chip">6 mg</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Pouches &middot; 15 per tin</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 7 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="pouches">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="On! Mint nicotine pouch tin"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">On! Mint</h3><span class="chip">3 mg</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Pouches &middot; 20 per tin</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 11 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="pouches">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="On! Coffee nicotine pouch tin"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">On! Coffee</h3><span class="chip">9 mg</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Pouches &middot; 20 per tin</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 6 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="pouches">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Velo Mint nicotine pouch tin"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Velo Mint</h3><span class="chip">9 mg</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Pouches &middot; 20 per can</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 8 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="pouches">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Velo Wintergreen nicotine pouch tin"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Velo Wintergreen</h3><span class="chip">3 mg</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Pouches &middot; 20 per can</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 5 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="vapes">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Disposable vape device, tobacco"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Disposable &mdash; Tobacco</h3><span class="chip">50 mg/mL</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Vape &middot; single unit</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 13 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="vapes">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Disposable vape device, menthol"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Disposable &mdash; Menthol</h3><span class="chip">50 mg/mL</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Vape &middot; single unit &middot; restricted in some states</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 8 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="vapes">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Rechargeable pod system device"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Pod System Device</h3><span class="chip">0 mg</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Vape &middot; hardware only, pods sold separately</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 10 locations</p>
+        </div>
+      </article>
+
+      <article class="card card-hover overflow-hidden" data-category="vapes">
+        <div class="prod-ph ph" data-label="Product Photo" role="img" aria-label="Replacement pods four pack, tobacco"></div>
+        <div style="padding:20px">
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="h-card">Replacement Pods</h3><span class="chip">30 mg/mL</span>
+          </div>
+          <p class="mono" style="font-size:12.5px; color:var(--muted); margin-top:8px">Vape &middot; 4-pack, tobacco</p>
+          <p class="mono" style="font-size:12.5px; margin-top:14px"><span class="stock-dot" aria-hidden="true"></span> In stock at 10 locations</p>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="mono" id="inventoryEmpty" hidden style="margin-top:32px; color:var(--muted); font-size:13px">
+      NO ITEMS IN THIS CATEGORY.
+    </p>
+
+    <p class="mono reveal" style="margin-top:36px; font-size:12px; letter-spacing:.06em; color:var(--muted)">
+      DISPLAY ONLY. PRODUCTS ARE DISPENSED AT THE MACHINE AFTER ID VERIFICATION. NO ONLINE SALES.
+    </p>
+  </div>
+</section>
+
+<hr class="hairline">
+
+<!-- ============================================================
+     SECTION 5: HOST A MACHINE — primary conversion section
+     Form validates client-side. Swap ENDPOINT in the script block
+     for a real POST URL; the submit handler is already async.
+     ============================================================ -->
+<section class="section" id="host" aria-labelledby="hostTitle" style="background:var(--panel)">
+  <div class="container">
+    <div class="grid gap-14 lg:gap-20 lg:grid-cols-2 items-start">
+
+      <!-- Left: the offer -->
+      <div class="reveal">
+        <p class="eyebrow">Host a Machine</p>
+        <h2 class="h-section" id="hostTitle" style="margin-top:18px">
+          Nine square feet. New margin. No labor.
+        </h2>
+        <p class="lead" style="margin-top:20px">
+          Your bartenders stop running to the back for a tin. The machine handles the
+          age check, the payment, and the paperwork. You collect a share of every sale
+          and never touch inventory.
+        </p>
+
+        <dl style="margin-top:40px; border-top:1px solid var(--line)">
+          <div class="spec"><dt>Revenue Share</dt><dd>20% of net sales, paid monthly by ACH</dd></div>
+          <div class="spec"><dt>Upfront Cost</dt><dd>$0 &mdash; we own, insure, and service the unit</dd></div>
+          <div class="spec"><dt>Install</dt><dd>Under 2 hours &middot; one 110V outlet, no plumbing</dd></div>
+          <div class="spec"><dt>Restocking</dt><dd>Route service weekly, or on a telemetry threshold</dd></div>
+          <div class="spec"><dt>Term</dt><dd>12 months, 30-day exit for any reason</dd></div>
+          <div class="spec"><dt>Compliance</dt><dd>We confirm your local tobacco retail permit before install</dd></div>
+        </dl>
+
+        <div class="card" style="margin-top:36px; padding:24px">
+          <p class="mono" style="font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent)">Typical Placement</p>
+          <p class="lead" style="margin-top:12px; font-size:16px">
+            A 120-seat bar doing weekend volume runs roughly 40&ndash;70 verified transactions a week.
+            We will model your specific traffic before either of us signs anything.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: lead form -->
+      <div class="reveal">
+        <div class="card" style="padding:28px">
+
+          <form id="hostForm" novalidate>
+            <h3 class="h-card" style="font-size:1.3rem">Request a placement review</h3>
+            <p class="lead" style="margin-top:10px; font-size:15.5px">
+              Licensed 21+ venues only. We respond within one business day.
+            </p>
+
+            <div style="margin-top:28px">
+              <label class="field">
+                <span class="field-label">Business Name</span>
+                <input class="input" type="text" name="business" id="f-business" required
+                       autocomplete="organization" placeholder="The Foundry Bar"
+                       aria-describedby="e-business">
+              </label>
+              <p class="error" id="e-business" role="alert">Enter your business name.</p>
+
+              <label class="field" style="margin-top:16px">
+                <span class="field-label">Contact Name</span>
+                <input class="input" type="text" name="contact" id="f-contact" required
+                       autocomplete="name" placeholder="Dana Whitfield"
+                       aria-describedby="e-contact">
+              </label>
+              <p class="error" id="e-contact" role="alert">Enter a contact name.</p>
+
+              <div class="grid sm:grid-cols-2 gap-x-5" style="margin-top:16px">
+                <div>
+                  <label class="field">
+                    <span class="field-label">Email</span>
+                    <input class="input" type="email" name="email" id="f-email" required
+                           autocomplete="email" placeholder="dana@foundrybar.com"
+                           aria-describedby="e-email">
+                  </label>
+                  <p class="error" id="e-email" role="alert">Enter a valid email address.</p>
+                </div>
+                <div>
+                  <label class="field">
+                    <span class="field-label">Phone</span>
+                    <input class="input" type="tel" name="phone" id="f-phone" required
+                           autocomplete="tel" placeholder="(312) 555-0148"
+                           aria-describedby="e-phone">
+                  </label>
+                  <p class="error" id="e-phone" role="alert">Enter a phone number with at least 10 digits.</p>
+                </div>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-x-5" style="margin-top:16px">
+                <div>
+                  <label class="field">
+                    <span class="field-label">Venue Type</span>
+                    <select class="input" name="venue" id="f-venue" required aria-describedby="e-venue">
+                      <option value="">Select one</option>
+                      <option value="bar">Bar</option>
+                      <option value="lounge">Hookah Lounge</option>
+                      <option value="smoke-shop">Smoke Shop</option>
+                      <option value="hotel">Hotel</option>
+                      <option value="other">Other 21+ Venue</option>
+                    </select>
+                  </label>
+                  <p class="error" id="e-venue" role="alert">Select a venue type.</p>
+                </div>
+                <div>
+                  <label class="field">
+                    <span class="field-label">Avg. Daily Foot Traffic</span>
+                    <input class="input" type="number" name="traffic" id="f-traffic" required
+                           min="1" step="1" inputmode="numeric" placeholder="250"
+                           aria-describedby="e-traffic">
+                  </label>
+                  <p class="error" id="e-traffic" role="alert">Enter an estimate as a whole number.</p>
+                </div>
+              </div>
+
+              <label class="field" style="margin-top:16px">
+                <span class="field-label">Message <span style="text-transform:none; letter-spacing:0">(optional)</span></span>
+                <textarea class="input" name="message" id="f-message"
+                          placeholder="Hours, floor space available, existing tobacco permit, anything else we should know."></textarea>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px" id="hostSubmit">
+              Request Placement Review
+            </button>
+
+            <p class="mono" style="font-size:11px; line-height:1.5; letter-spacing:.05em; color:var(--muted); margin-top:16px">
+              BY SUBMITTING, YOU CONFIRM YOU ARE 21+ AND AUTHORIZED TO ACT FOR THIS BUSINESS.
+            </p>
+          </form>
+
+          <!-- Success state -->
+          <div id="hostSuccess" hidden role="status" style="text-align:center; padding:32px 8px">
+            <svg viewBox="0 0 48 48" width="52" height="52" fill="none" stroke="#FF9E1B" stroke-width="1.5"
+                 style="margin:0 auto" role="img" aria-label="Request received">
+              <circle cx="24" cy="24" r="21"></circle>
+              <path d="M15 24.5l6.5 6.5L33 19"></path>
+            </svg>
+            <h3 class="h-card" style="font-size:1.35rem; margin-top:22px">Request received.</h3>
+            <p class="lead" style="margin:14px auto 0; text-align:center; font-size:16px">
+              A placement manager will email you within one business day with a traffic
+              model and the permit checklist for your county.
+            </p>
+            <p class="mono" style="font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-top:24px">
+              Reference: <span id="hostRef">SV-0000</span>
+            </p>
+            <button type="button" class="btn btn-ghost btn-sm" style="margin-top:26px" id="hostReset">Submit another venue</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="hairline">
+
+<!-- ============================================================
+     SECTION 6: LOCATIONS — searchable venue list (filters as you type)
+     ============================================================ -->
+<section class="section" id="locations" aria-labelledby="locationsTitle">
+  <div class="container">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 reveal">
+      <div style="max-width:62ch">
+        <p class="eyebrow">Locations</p>
+        <h2 class="h-section" id="locationsTitle" style="margin-top:18px">Find a machine.</h2>
+        <p class="lead" style="margin-top:20px">
+          Every listed venue is 21+ and enforces its own door policy. Bring a valid,
+          unexpired government ID &mdash; the machine will not dispense without one.
+        </p>
+      </div>
+
+      <div style="min-width:280px; flex:0 1 360px">
+        <label class="field" style="margin:0">
+          <span class="field-label">Search by venue, city, or street</span>
+          <input class="input" type="search" id="locationSearch" placeholder="Chicago, Foundry, Halsted&hellip;"
+                 autocomplete="off" aria-controls="locationList">
+        </label>
+      </div>
+    </div>
+
+    <ul id="locationList" style="margin-top:44px; border-top:1px solid var(--line)" aria-live="polite">
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">The Foundry Bar</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">Chicago, IL</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">1412 N Halsted St</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">4pm&ndash;2am daily</p>
+        </div>
+      </li>
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">Cedar &amp; Ash Lounge</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">Chicago, IL</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">88 W Randolph St</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">6pm&ndash;3am Wed&ndash;Sun</p>
+        </div>
+      </li>
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">Northline Smoke Shop</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">Milwaukee, WI</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">2207 N Farwell Ave</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">10am&ndash;11pm daily</p>
+        </div>
+      </li>
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">Hotel Meridian &mdash; Lobby Level</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">Indianapolis, IN</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">310 S Meridian St</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">24 hours</p>
+        </div>
+      </li>
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">Basalt Hookah Lounge</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">Detroit, MI</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">4501 Woodward Ave</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">7pm&ndash;2am daily</p>
+        </div>
+      </li>
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">Ironside Tavern</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">Cleveland, OH</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">1265 W 6th St</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">3pm&ndash;2:30am daily</p>
+        </div>
+      </li>
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">Grant Street Cigar &amp; Vape</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">Pittsburgh, PA</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">939 Grant St</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">9am&ndash;10pm Mon&ndash;Sat</p>
+        </div>
+      </li>
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">The Wren Room</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">Nashville, TN</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">705 Division St</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">5pm&ndash;3am daily</p>
+        </div>
+      </li>
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">Rampart Social Club</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">New Orleans, LA</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">1128 N Rampart St</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">6pm&ndash;4am daily</p>
+        </div>
+      </li>
+
+      <li class="location reveal" style="border-bottom:1px solid var(--line)">
+        <div class="grid gap-2 md:grid-cols-12 md:gap-6 md:items-baseline" style="padding:22px 0">
+          <h3 class="h-card md:col-span-4">Copper District Hotel &mdash; Mezzanine</h3>
+          <p class="mono md:col-span-3" style="font-size:13.5px; color:var(--muted)">Phoenix, AZ</p>
+          <p class="mono md:col-span-3" style="font-size:13.5px">220 E Jefferson St</p>
+          <p class="mono md:col-span-2" style="font-size:13px; color:var(--muted)">24 hours</p>
+        </div>
+      </li>
+
+    </ul>
+
+    <p class="mono" id="locationEmpty" hidden style="margin-top:28px; color:var(--muted); font-size:13px">
+      NO VENUES MATCH THAT SEARCH.
+    </p>
+
+    <p class="lead reveal" style="margin-top:36px; font-size:15.5px">
+      Do not see your city? <a href="#host" class="accent" style="border-bottom:1px solid currentColor">Host a machine</a>
+      and we will start a route there.
+    </p>
+  </div>
+</section>
+
+<hr class="hairline">
+
+<!-- ============================================================
+     SECTION 7: FAQ — accordion
+     ============================================================ -->
+<section class="section" id="faq" aria-labelledby="faqTitle">
+  <div class="container">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-20">
+
+      <div class="lg:col-span-4 reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="h-section" id="faqTitle" style="margin-top:18px">Straight answers.</h2>
+        <p class="lead" style="margin-top:20px; font-size:16px">
+          Still have questions? Send them with your placement request and we will answer
+          before anything is installed.
+        </p>
+      </div>
+
+      <div class="lg:col-span-8 reveal" id="faqList" style="border-top:1px solid var(--line)">
+
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn" aria-expanded="false" aria-controls="faq-p1" id="faq-b1">
+              <span>How does the machine verify age?</span>
+              <span class="faq-sign" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-p1" role="region" aria-labelledby="faq-b1">
+            <div class="faq-panel-inner">
+              Two checks, in sequence. The scanner reads the PDF417 barcode on the back of a
+              government-issued ID and pulls the date of birth and expiration date. Then facial
+              age estimation compares the person standing at the machine to the credential.
+              Both have to pass. Expired IDs, damaged barcodes, and mismatches are all refusals.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn" aria-expanded="false" aria-controls="faq-p2" id="faq-b2">
+              <span>What happens if a minor tries to buy?</span>
+              <span class="faq-sign" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-p2" role="region" aria-labelledby="faq-b2">
+            <div class="faq-panel-inner">
+              The machine refuses and dispenses nothing. The attempt is timestamped and written
+              to the audit log with the refusal reason. Repeated attempts at one unit trigger an
+              alert to our operations team and to the venue contact. No payment is captured on a
+              failed verification.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn" aria-expanded="false" aria-controls="faq-p3" id="faq-b3">
+              <span>What if someone tampers with the unit?</span>
+              <span class="faq-sign" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-p3" role="region" aria-labelledby="faq-b3">
+            <div class="faq-panel-inner">
+              Door sensors and an accelerometer fire an alert the moment the cabinet is forced or
+              moved. The unit locks itself, stops dispensing, and pushes the event over LTE. We can
+              also lock any machine in the fleet remotely from a laptop. The cabinet is bolted to
+              the floor or wall at install, and the hardware is insured by us, not by you.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn" aria-expanded="false" aria-controls="faq-p4" id="faq-b4">
+              <span>What are the revenue terms?</span>
+              <span class="faq-sign" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-p4" role="region" aria-labelledby="faq-b4">
+            <div class="faq-panel-inner">
+              You take 20% of net sales from your unit, paid monthly by ACH with a per-transaction
+              statement. There is no upfront cost, no lease, no equipment rental, and no minimum
+              volume clause. We carry the cost of the machine, the stock, the connectivity, and
+              the service route.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn" aria-expanded="false" aria-controls="faq-p5" id="faq-b5">
+              <span>How often is the machine restocked?</span>
+              <span class="faq-sign" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-p5" role="region" aria-labelledby="faq-b5">
+            <div class="faq-panel-inner">
+              Weekly on a fixed route, plus an off-cycle visit whenever telemetry shows a selection
+              below 20% stock. Restocking takes about fifteen minutes and we schedule it outside
+              your peak hours. Your staff never handles product and never counts inventory.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn" aria-expanded="false" aria-controls="faq-p6" id="faq-b6">
+              <span>Do I need a tobacco retail permit?</span>
+              <span class="faq-sign" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-p6" role="region" aria-labelledby="faq-b6">
+            <div class="faq-panel-inner">
+              In most jurisdictions, yes &mdash; the sale happens on your premises, so the retail
+              permit is tied to your address. We check your state and county requirements during
+              the placement review and hand you the exact filing list before install. Federal rules
+              also restrict vending machine sales to facilities where people under 21 are not
+              permitted at any time, which is why we place only in 21+ venues.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn" aria-expanded="false" aria-controls="faq-p7" id="faq-b7">
+              <span>What does installation involve?</span>
+              <span class="faq-sign" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-p7" role="region" aria-labelledby="faq-b7">
+            <div class="faq-panel-inner">
+              Under two hours. We need a 39-inch-wide clear span against a wall, one standard 110V
+              outlet, and access to move a 640-pound cabinet through your doors. No plumbing, no
+              network drop, no electrical work. We anchor it, stock it, run three test transactions
+              with your manager, and leave.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn" aria-expanded="false" aria-controls="faq-p8" id="faq-b8">
+              <span>Can I remove the machine?</span>
+              <span class="faq-sign" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-p8" role="region" aria-labelledby="faq-b8">
+            <div class="faq-panel-inner">
+              The agreement runs twelve months with a 30-day exit for any reason. We pull the unit,
+              patch the anchor points, and settle your final revenue share on the next cycle. If a
+              placement is not earning, we would rather move it than argue about it.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     SECTION 8: FOOTER — compliance links and second warning copy
+     ============================================================ -->
+<footer style="border-top:1px solid var(--line); background:var(--panel)">
+  <div class="container" style="padding-top:64px; padding-bottom:48px">
+
+    <div class="grid gap-12 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <span class="wordmark"><span class="wordmark-dot" aria-hidden="true"></span>SENTRY<span style="color:var(--muted); font-weight:500"> VEND</span></span>
+        <p class="lead" style="margin-top:18px; font-size:15.5px; max-width:44ch">
+          Age-verified vending equipment for licensed 21+ venues. We place, stock,
+          and service the hardware. We do not sell to consumers online.
+        </p>
+      </div>
+
+      <nav class="md:col-span-3" aria-label="Site">
+        <p class="eyebrow">Site</p>
+        <ul style="margin-top:18px; display:grid; gap:11px">
+          <li><a href="#how" class="nav-link">How It Works</a></li>
+          <li><a href="#machine" class="nav-link">The Machine</a></li>
+          <li><a href="#inventory" class="nav-link">Inventory</a></li>
+          <li><a href="#host" class="nav-link">Host a Machine</a></li>
+          <li><a href="#locations" class="nav-link">Find a Machine</a></li>
+        </ul>
+      </nav>
+
+      <nav class="md:col-span-4" aria-label="Compliance">
+        <p class="eyebrow">Compliance</p>
+        <ul style="margin-top:18px; display:grid; gap:11px">
+          <li><a href="#" class="nav-link">Terms of Service</a></li>
+          <li><a href="#" class="nav-link">Privacy Policy</a></li>
+          <li><a href="#" class="nav-link">Age Verification Policy</a></li>
+          <li><a href="#" class="nav-link">Licensing &amp; Permits</a></li>
+          <li><a href="#" class="nav-link">Responsible Placement Standards</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Second copy of the nicotine warning, per FDA requirements -->
+    <div style="margin-top:56px; border:2px solid var(--text); padding:20px 22px">
+      <p class="mono" style="font-size:12.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; line-height:1.5">
+        Warning: This product contains nicotine. Nicotine is an addictive chemical.
+      </p>
+    </div>
+
+    <div style="margin-top:36px; padding-top:26px; border-top:1px solid var(--line)"
+         class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <p class="mono" style="font-size:11.5px; letter-spacing:.08em; color:var(--muted); max-width:78ch">
+        SENTRY VEND PLACES AND SERVICES EQUIPMENT FOR LICENSED, 21+ RESTRICTED VENUES ONLY.
+        NO PRODUCT IS SOLD, SHIPPED, OR RESERVED THROUGH THIS WEBSITE.
+      </p>
+      <p class="mono" style="font-size:11.5px; letter-spacing:.08em; color:var(--muted)">
+        &copy; <span id="year">2026</span> Sentry Vend LLC
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     FIXED NICOTINE WARNING — required, non-dismissible, every page
+     ============================================================ -->
+<aside class="warning-bar" role="note" aria-label="Nicotine warning">
+  <p>Warning: This product contains nicotine. Nicotine is an addictive chemical.</p>
+</aside>
+
+<script>
+/* ============================================================
+   SENTRY VEND — behavior
+   Sections: age gate, nav, mobile menu, reveal, inventory tabs,
+   location search, FAQ accordion, lead form.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var $  = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ----------------------------------------------------------
+     0. Fixed warning bar — keep body padding equal to its height
+     ---------------------------------------------------------- */
+  var warnBar = $('.warning-bar');
+  function syncWarningHeight() {
+    if (!warnBar) return;
+    document.documentElement.style.setProperty('--warn-h', warnBar.offsetHeight + 'px');
+  }
+  syncWarningHeight();
+  window.addEventListener('resize', syncWarningHeight);
+
+  /* ----------------------------------------------------------
+     1. AGE GATE
+     sessionStorage keeps the answer for the tab session only.
+     ESC is intentionally not bound: the visitor must choose.
+     Set EXIT_URL to send "No" to an external neutral page.
+     ---------------------------------------------------------- */
+  var STORAGE_KEY = 'sv_age_verified';
+  var EXIT_URL = '';                  /* e.g. 'https://www.google.com' */
+  var gate     = $('#ageGate');
+  var gateAsk  = $('#ageGateAsk');
+  var gateExit = $('#ageGateExit');
+
+  function readGate() {
+    try { return window.sessionStorage.getItem(STORAGE_KEY); }
+    catch (e) { return null; }        /* private mode / storage blocked */
+  }
+  function writeGate(v) {
+    try { window.sessionStorage.setItem(STORAGE_KEY, v); } catch (e) {}
+  }
+
+  function lockScroll(on) { document.body.classList.toggle('is-locked', !!on); }
+
+  function openGate() {
+    gate.hidden = false;
+    lockScroll(true);
+    var first = $('#ageYes');
+    if (first) first.focus();
+  }
+  function closeGate() {
+    gate.hidden = true;
+    lockScroll(false);
+  }
+  function showExitState() {
+    gateAsk.hidden = true;
+    gateExit.hidden = false;
+    gate.hidden = false;
+    lockScroll(true);
+    gateExit.setAttribute('tabindex', '-1');
+    gateExit.focus();
+    if (EXIT_URL) window.location.replace(EXIT_URL);
+  }
+
+  var stored = readGate();
+  if (stored === 'yes')      { closeGate(); }
+  else if (stored === 'no')  { showExitState(); }
+  else                       { openGate(); }
+
+  $('#ageYes').addEventListener('click', function () {
+    writeGate('yes');
+    closeGate();
+  });
+  $('#ageNo').addEventListener('click', function () {
+    writeGate('no');
+    showExitState();
+  });
+
+  /* Focus trap — keep tabbing inside the gate while it is open */
+  gate.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { e.preventDefault(); return; }   /* a choice is required */
+    if (e.key !== 'Tab') return;
+    var nodes = $$('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', gate)
+      .filter(function (n) { return n.offsetParent !== null; });
+    if (!nodes.length) return;
+    var first = nodes[0], last = nodes[nodes.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  /* ----------------------------------------------------------
+     2. NAV — shrink + blur on scroll, active-section highlight
+     ---------------------------------------------------------- */
+  var nav = $('#nav');
+  function onScroll() { nav.classList.toggle('is-scrolled', window.scrollY > 24); }
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  var navLinks = $$('header .nav-link');
+  var sections = navLinks
+    .map(function (l) { return document.querySelector(l.getAttribute('href')); })
+    .filter(Boolean);
+
+  if ('IntersectionObserver' in window && sections.length) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(function (l) {
+          l.classList.toggle('is-active', l.getAttribute('href') === '#' + entry.target.id);
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(function (s) { spy.observe(s); });
+  }
+
+  /* ----------------------------------------------------------
+     3. MOBILE MENU — full-screen overlay below 768px
+     ---------------------------------------------------------- */
+  var burger = $('#burger');
+  var menu   = $('#mobileMenu');
+
+  function setMenu(open) {
+    menu.classList.toggle('is-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    lockScroll(open);
+    if (open) { var f = $('#burgerClose'); if (f) f.focus(); }
+    else { burger.focus(); }
+  }
+  burger.addEventListener('click', function () { setMenu(!menu.classList.contains('is-open')); });
+  $('#burgerClose').addEventListener('click', function () { setMenu(false); });
+  $$('#mobileMenu a').forEach(function (a) {
+    a.addEventListener('click', function () { setMenu(false); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menu.classList.contains('is-open')) setMenu(false);
+  });
+
+  /* ----------------------------------------------------------
+     4. REVEAL — fade and rise on section entry, 400ms ease-out
+     ---------------------------------------------------------- */
+  var reveals = $$('.reveal');
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    reveals.forEach(function (el) { el.classList.add('is-visible'); });
+  } else {
+    var revealObserver = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        obs.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    reveals.forEach(function (el) { revealObserver.observe(el); });
+  }
+
+  /* ----------------------------------------------------------
+     5. INVENTORY TABS — plain JS filter, no library
+     ---------------------------------------------------------- */
+  var tabs  = $$('.tab');
+  var cards = $$('#inventoryGrid [data-category]');
+  var invEmpty = $('#inventoryEmpty');
+
+  function applyFilter(filter) {
+    var shown = 0;
+    cards.forEach(function (card) {
+      var match = filter === 'all' || card.getAttribute('data-category') === filter;
+      card.hidden = !match;
+      if (match) shown++;
+    });
+    if (invEmpty) invEmpty.hidden = shown > 0;
+  }
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.setAttribute('aria-pressed', String(t === tab)); });
+      applyFilter(tab.getAttribute('data-filter'));
+    });
+  });
+
+  /* ----------------------------------------------------------
+     6. LOCATION SEARCH — filters as you type
+     ---------------------------------------------------------- */
+  var search    = $('#locationSearch');
+  var locations = $$('#locationList .location');
+  var locEmpty  = $('#locationEmpty');
+
+  if (search) {
+    search.addEventListener('input', function () {
+      var q = search.value.trim().toLowerCase();
+      var shown = 0;
+      locations.forEach(function (li) {
+        var match = !q || li.textContent.toLowerCase().indexOf(q) !== -1;
+        li.hidden = !match;
+        if (match) shown++;
+      });
+      if (locEmpty) locEmpty.hidden = shown > 0;
+    });
+  }
+
+  /* ----------------------------------------------------------
+     7. FAQ ACCORDION — one panel open at a time
+     ---------------------------------------------------------- */
+  var faqButtons = $$('.faq-btn');
+
+  function closePanel(btn) {
+    var panel = document.getElementById(btn.getAttribute('aria-controls'));
+    btn.setAttribute('aria-expanded', 'false');
+    panel.style.maxHeight = '0px';
+  }
+  function openPanel(btn) {
+    var panel = document.getElementById(btn.getAttribute('aria-controls'));
+    btn.setAttribute('aria-expanded', 'true');
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+  }
+  faqButtons.forEach(function (btn) {
+    closePanel(btn);
+    btn.addEventListener('click', function () {
+      var isOpen = btn.getAttribute('aria-expanded') === 'true';
+      faqButtons.forEach(closePanel);
+      if (!isOpen) openPanel(btn);
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    faqButtons.forEach(function (btn) {
+      if (btn.getAttribute('aria-expanded') === 'true') { closePanel(btn); btn.focus(); }
+    });
+  });
+  window.addEventListener('resize', function () {
+    faqButtons.forEach(function (btn) {
+      if (btn.getAttribute('aria-expanded') === 'true') openPanel(btn);
+    });
+  });
+
+  /* ----------------------------------------------------------
+     8. HOST LEAD FORM — client-side validation, POST-ready
+     Drop a URL into ENDPOINT and the submit handler posts JSON.
+     ---------------------------------------------------------- */
+  var ENDPOINT = '';                  /* e.g. 'https://api.example.com/leads' */
+  var form     = $('#hostForm');
+  var success  = $('#hostSuccess');
+  var submitBtn = $('#hostSubmit');
+
+  var RULES = [
+    { id: 'f-business', err: 'e-business', test: function (v) { return v.trim().length >= 2; } },
+    { id: 'f-contact',  err: 'e-contact',  test: function (v) { return v.trim().length >= 2; } },
+    { id: 'f-email',    err: 'e-email',    test: function (v) { return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v.trim()); } },
+    { id: 'f-phone',    err: 'e-phone',    test: function (v) { return v.replace(/\D/g, '').length >= 10; } },
+    { id: 'f-venue',    err: 'e-venue',    test: function (v) { return v !== ''; } },
+    { id: 'f-traffic',  err: 'e-traffic',  test: function (v) { return /^\d+$/.test(v.trim()) && Number(v) > 0; } }
+  ];
+
+  function setFieldError(rule, invalid) {
+    var field = document.getElementById(rule.id);
+    var msg   = document.getElementById(rule.err);
+    field.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+    msg.classList.toggle('is-shown', invalid);
+  }
+
+  RULES.forEach(function (rule) {
+    var field = document.getElementById(rule.id);
+    var clear = function () {
+      if (field.getAttribute('aria-invalid') === 'true' && rule.test(field.value)) setFieldError(rule, false);
+    };
+    field.addEventListener('input', clear);
+    field.addEventListener('change', clear);
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var firstInvalid = null;
+    RULES.forEach(function (rule) {
+      var field = document.getElementById(rule.id);
+      var ok = rule.test(field.value);
+      setFieldError(rule, !ok);
+      if (!ok && !firstInvalid) firstInvalid = field;
+    });
+    if (firstInvalid) { firstInvalid.focus(); return; }
+
+    var payload = {
+      business:  $('#f-business').value.trim(),
+      contact:   $('#f-contact').value.trim(),
+      email:     $('#f-email').value.trim(),
+      phone:     $('#f-phone').value.trim(),
+      venueType: $('#f-venue').value,
+      dailyFootTraffic: Number($('#f-traffic').value),
+      message:   $('#f-message').value.trim(),
+      submittedAt: new Date().toISOString()
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    var send = ENDPOINT
+      ? fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).then(function (res) { if (!res.ok) throw new Error('Request failed'); })
+      : Promise.resolve();           /* no backend wired up yet */
+
+    send.then(function () {
+      $('#hostRef').textContent = 'SV-' + String(Math.floor(1000 + Math.random() * 9000));
+      form.hidden = true;
+      success.hidden = false;
+      success.setAttribute('tabindex', '-1');
+      success.focus();
+    }).catch(function () {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Request Placement Review';
+      window.alert('That did not go through. Call (312) 555-0100 and we will take it by phone.');
+    });
+  });
+
+  $('#hostReset').addEventListener('click', function () {
+    form.reset();
+    RULES.forEach(function (rule) { setFieldError(rule, false); });
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Request Placement Review';
+    success.hidden = true;
+    form.hidden = false;
+    $('#f-business').focus();
+  });
+
+  /* ----------------------------------------------------------
+     9. Footer year
+     ---------------------------------------------------------- */
+  $('#year').textContent = String(new Date().getFullYear());
+
+})();
+</script>
+
+</body>
+</html>
